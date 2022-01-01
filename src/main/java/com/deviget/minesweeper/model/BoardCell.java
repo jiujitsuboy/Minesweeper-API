@@ -17,4 +17,5 @@ public class BoardCell {
   private int value;
   private boolean isFlagged;
   private boolean isOpened;
+  private boolean isDetonated;
 }

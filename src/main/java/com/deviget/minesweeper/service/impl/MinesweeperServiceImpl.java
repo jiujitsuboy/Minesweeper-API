@@ -6,6 +6,7 @@ import com.deviget.minesweeper.entity.UserEntity;
 import com.deviget.minesweeper.exception.CellNotFoundException;
 import com.deviget.minesweeper.exception.GameIsOverException;
 import com.deviget.minesweeper.exception.GameNotFoundException;
+import com.deviget.minesweeper.exception.InvalidGameParameter;
 import com.deviget.minesweeper.exception.UserNotFoundException;
 import com.deviget.minesweeper.model.BoardCell;
 import com.deviget.minesweeper.model.GameStatus;
@@ -42,6 +43,19 @@ public class MinesweeperServiceImpl implements MinesweeperService {
   @Override
   @Transactional
   public MinesweeperGameDetails createNewGame(UUID userId, int rows, int columns, int numBombs) {
+
+    if (rows < 0 || rows > 999) {
+      throw new InvalidGameParameter("Number of rows should be between 0 to 999");
+    }
+    else if (columns < 0 || columns > 999) {
+      throw new InvalidGameParameter("Number of columns should be between 0 to 999");
+    }
+    else if (numBombs < 0 || numBombs > 999) {
+      throw new InvalidGameParameter("Number of bombs should be between 0 to 999");
+    }
+    else if (numBombs > (rows * columns)) {
+      throw new InvalidGameParameter("Number of bombs can't be greater than the number of cells on the board");
+    }
 
     UserEntity user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("No such user found"));
 
@@ -100,10 +114,9 @@ public class MinesweeperServiceImpl implements MinesweeperService {
     MinesweeperGameEntity minesweeperGameEntity = minesweeperRepository.findByIdAndUserId(gameId, userId)
         .orElseThrow(() -> new GameNotFoundException("No game found"));
 
-    if(minesweeperGameEntity.isGameOver()){
+    if (minesweeperGameEntity.isGameOver()) {
       throw new GameIsOverException("Game is already finished");
     }
-
 
     MinesweeperBoardCellEntity minesweeperBoardCellEntity = minesweeperBoardCellRepository.findByGameIdAndRowAndColumn(gameId, row, column)
         .orElseThrow(() -> new CellNotFoundException("No cell found"));
@@ -111,16 +124,13 @@ public class MinesweeperServiceImpl implements MinesweeperService {
     minesweeperBoardCellEntity.setOpened(true);
     int cellValue = minesweeperBoardCellEntity.getValue();
 
-    System.out.println(
-        String.format("minesweeperGameEntity.getNumCellsOpened(): %d == ((row * column) - minesweeperGameEntity.getNumBombs()): %d",
-            minesweeperGameEntity.getNumCellsOpened(), ((row * column) - minesweeperGameEntity.getNumBombs())));
-
     emptyBoardCells.add(BoardCell.builder()
         .id(minesweeperBoardCellEntity.getId())
         .row(row)
         .column(column)
         .value(cellValue)
         .isFlagged(minesweeperBoardCellEntity.isFlagged())
+        .isDetonated(cellValue == -1)
         .isOpened(true)
         .build());
 
@@ -129,7 +139,6 @@ public class MinesweeperServiceImpl implements MinesweeperService {
         isGameOver = true;
         break;
       case 0:
-        System.out.println("Cell value equals ZERO");
         BoardCell[][] board = MinesweeperGameEntity.getMatrixBoardCell(minesweeperGameEntity);
         board[row][column].setOpened(true);
         getAdjacentEmptyCells(row, column, board, emptyBoardCells);
@@ -144,9 +153,11 @@ public class MinesweeperServiceImpl implements MinesweeperService {
     if (totalNumCellsOpened == totalNumCellsGame) {
       isWon = true;
       isGameOver = true;
-      minesweeperGameEntity.setEndTime(currentInstant);
     }
 
+    if (isGameOver) {
+      minesweeperGameEntity.setEndTime(currentInstant);
+    }
     minesweeperGameEntity.setDuration(Duration.between(minesweeperGameEntity.getStartTime(), currentInstant));
     minesweeperGameEntity.setNumCellsOpened(totalNumCellsOpened);
     minesweeperGameEntity.setGameOver(isGameOver);
@@ -194,6 +205,7 @@ public class MinesweeperServiceImpl implements MinesweeperService {
             .column(columnIndex)
             .value(-1)
             .isFlagged(false)
+            .isDetonated(false)
             .build();
         board[rowIndex][columnIndex] = boardCell;
 
@@ -212,6 +224,7 @@ public class MinesweeperServiceImpl implements MinesweeperService {
               .column(columnIndex)
               .value(0)
               .isFlagged(false)
+              .isDetonated(false)
               .build();
         }
       }
@@ -265,6 +278,7 @@ public class MinesweeperServiceImpl implements MinesweeperService {
           .value(board[row - 1][column - 1].getValue())
           .isFlagged(board[row - 1][column - 1].isFlagged())
           .isOpened(true)
+          .isDetonated(false)
           .build());
       getAdjacentEmptyCells(row - 1, column - 1, board, emptyBoardCells);
     }
@@ -278,6 +292,7 @@ public class MinesweeperServiceImpl implements MinesweeperService {
           .value(board[row - 1][column].getValue())
           .isFlagged(board[row - 1][column].isFlagged())
           .isOpened(true)
+          .isDetonated(false)
           .build());
       getAdjacentEmptyCells(row - 1, column, board, emptyBoardCells);
     }
@@ -292,6 +307,7 @@ public class MinesweeperServiceImpl implements MinesweeperService {
           .value(board[row - 1][column + 1].getValue())
           .isFlagged(board[row - 1][column + 1].isFlagged())
           .isOpened(true)
+          .isDetonated(false)
           .build());
       getAdjacentEmptyCells(row - 1, column + 1, board, emptyBoardCells);
     }
@@ -306,6 +322,7 @@ public class MinesweeperServiceImpl implements MinesweeperService {
           .value(board[row + 1][column - 1].getValue())
           .isFlagged(board[row + 1][column - 1].isFlagged())
           .isOpened(true)
+          .isDetonated(false)
           .build());
       getAdjacentEmptyCells(row + 1, column - 1, board, emptyBoardCells);
     }
@@ -319,6 +336,7 @@ public class MinesweeperServiceImpl implements MinesweeperService {
           .value(board[row + 1][column].getValue())
           .isFlagged(board[row + 1][column].isFlagged())
           .isOpened(true)
+          .isDetonated(false)
           .build());
       getAdjacentEmptyCells(row + 1, column, board, emptyBoardCells);
     }
@@ -333,6 +351,7 @@ public class MinesweeperServiceImpl implements MinesweeperService {
           .value(board[row + 1][column + 1].getValue())
           .isFlagged(board[row + 1][column + 1].isFlagged())
           .isOpened(true)
+          .isDetonated(false)
           .build());
       getAdjacentEmptyCells(row + 1, column + 1, board, emptyBoardCells);
     }
@@ -347,6 +366,7 @@ public class MinesweeperServiceImpl implements MinesweeperService {
           .value(board[row][column - 1].getValue())
           .isFlagged(board[row][column - 1].isFlagged())
           .isOpened(true)
+          .isDetonated(false)
           .build());
       getAdjacentEmptyCells(row, column - 1, board, emptyBoardCells);
     }
@@ -360,6 +380,7 @@ public class MinesweeperServiceImpl implements MinesweeperService {
           .value(board[row][column + 1].getValue())
           .isFlagged(board[row][column + 1].isFlagged())
           .isOpened(true)
+          .isDetonated(false)
           .build());
       getAdjacentEmptyCells(row, column + 1, board, emptyBoardCells);
     }

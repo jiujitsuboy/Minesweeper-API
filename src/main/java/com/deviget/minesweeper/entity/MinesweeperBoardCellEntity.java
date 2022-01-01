@@ -43,6 +43,8 @@ public class MinesweeperBoardCellEntity {
   private boolean isFlagged;
   @Column(name = "IS_OPENED")
   private boolean isOpened;
+  @Column(name = "IS_DETONATED")
+  private boolean isDetonated;
 
 
   public static MinesweeperBoardCellEntity toEntity(MinesweeperGameEntity game, BoardCell boardCell){
@@ -52,6 +54,7 @@ public class MinesweeperBoardCellEntity {
         .value(boardCell.getValue())
         .isFlagged(boardCell.isFlagged())
         .isOpened(boardCell.isOpened())
+        .isDetonated(boardCell.isDetonated())
         .game(game)
         .build();
   }

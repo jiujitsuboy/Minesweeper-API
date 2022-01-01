@@ -130,6 +130,8 @@ public class MinesweeperGameEntity {
           .column(cell.getColumn())
           .value(cell.getValue())
           .isFlagged(cell.isFlagged())
+          .isOpened(cell.isOpened())
+          .isDetonated(cell.isDetonated())
           .build());
 
       board = tempBoard;
@@ -152,6 +154,8 @@ public class MinesweeperGameEntity {
             .row(rowIndex)
             .column(columnIndex)
             .isFlagged(boardCells[rowIndex][columnIndex].isFlagged())
+            .isDetonated(boardCells[rowIndex][columnIndex].isDetonated())
+            .isOpened(boardCells[rowIndex][columnIndex].isOpened())
             .value(boardCells[rowIndex][columnIndex].getValue())
             .build());
 
@@ -175,6 +179,7 @@ public class MinesweeperGameEntity {
         .isFlagged(boardCell.isFlagged())
         .value(boardCell.getValue())
         .isOpened(boardCell.isOpened())
+        .isDetonated(boardCell.isDetonated())
         .build()));
 
     return minesweeperBoardCellEntities;

@@ -3,6 +3,7 @@ package com.deviget.minesweeper.controller;
 import com.deviget.minesweeper.exception.GameIsOverException;
 import com.deviget.minesweeper.exception.GameNotFoundException;
 import com.deviget.minesweeper.exception.GenericAlreadyExistsException;
+import com.deviget.minesweeper.exception.InvalidGameParameter;
 import com.deviget.minesweeper.exception.InvalidRefreshTokenException;
 import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
@@ -76,6 +77,17 @@ public class RestResponseEntityExceptionHandler {
   @ExceptionHandler(GameIsOverException.class)
   protected ResponseEntity<Object> gameIsOverException(
       GameIsOverException ex, WebRequest request) {
+
+    Map<String, Object> body = new LinkedHashMap<>();
+    body.put("timestamp", LocalDateTime.now());
+    body.put("message", ex.getMessage());
+
+    return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+  }
+
+  @ExceptionHandler(InvalidGameParameter.class)
+  protected ResponseEntity<Object> invalidGameParameter(
+      InvalidGameParameter ex, WebRequest request) {
 
     Map<String, Object> body = new LinkedHashMap<>();
     body.put("timestamp", LocalDateTime.now());
