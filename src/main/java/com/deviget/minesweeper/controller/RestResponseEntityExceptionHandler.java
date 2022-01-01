@@ -95,5 +95,16 @@ public class RestResponseEntityExceptionHandler {
 
     return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
   }
+
+  @ExceptionHandler(Error.class)
+  protected ResponseEntity<Object> error(
+      Error ex, WebRequest request) {
+
+    Map<String, Object> body = new LinkedHashMap<>();
+    body.put("timestamp", LocalDateTime.now());
+    body.put("message", ex.getClass().getName());
+
+    return new ResponseEntity<>(body, HttpStatus.INTERNAL_SERVER_ERROR);
+  }
 }
 

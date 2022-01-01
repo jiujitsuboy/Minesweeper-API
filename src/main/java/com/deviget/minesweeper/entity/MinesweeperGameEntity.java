@@ -108,10 +108,39 @@ public class MinesweeperGameEntity {
         .user(UserEntity.toEntity(minesweeperGame.getDetails().getUser()))
         .build();
 
-    minesweeperGameEntity.setBoardCells(MinesweeperGameEntity.getListBoardCell(minesweeperGameEntity, minesweeperGame.getBoard()));
+    minesweeperGameEntity.setBoardCells(MinesweeperGameEntity.boardCellMatrixToListMinesweeperBoardCellEntity(minesweeperGameEntity, minesweeperGame.getBoard()));
 
     return minesweeperGameEntity;
 
+  }
+
+  public static List<BoardCell> fromMinesweeperBoardCellEntityListToBoarCellList(List<MinesweeperBoardCellEntity> minesweeperBoardCellEntities){
+
+    List<BoardCell> boardCells = new ArrayList<>();
+
+    minesweeperBoardCellEntities.stream().forEach(cell -> boardCells.add(BoardCell.builder()
+        .id(cell.getId())
+        .row(cell.getRow())
+        .column(cell.getColumn())
+        .value(cell.getValue())
+        .isFlagged(cell.isFlagged())
+        .isOpened(cell.isOpened())
+        .isDetonated(cell.isDetonated())
+        .build()));
+
+    return boardCells;
+  }
+
+  public static List<BoardCell> fromBoarCellMatrixToBoarCellList(MinesweeperGameEntity game, BoardCell[][] boardCells){
+
+    List<BoardCell> boardCellList = new ArrayList<>();
+
+    for (int rowIndex = 0; rowIndex < game.getNumRows(); rowIndex++) {
+      for (int columnIndex = 0; columnIndex < game.getNumColumns(); columnIndex++) {
+        boardCellList.add(boardCells[rowIndex][columnIndex]);
+      }}
+
+    return boardCellList;
   }
 
   public static BoardCell[][] getMatrixBoardCell(MinesweeperGameEntity game) {
@@ -141,7 +170,7 @@ public class MinesweeperGameEntity {
 
   }
 
-  public static List<MinesweeperBoardCellEntity> getListBoardCell(MinesweeperGameEntity game, BoardCell[][] boardCells) {
+  public static List<MinesweeperBoardCellEntity> boardCellMatrixToListMinesweeperBoardCellEntity(MinesweeperGameEntity game, BoardCell[][] boardCells) {
 
     List<MinesweeperBoardCellEntity> minesweeperBoardCellEntities = new ArrayList<>();
 
@@ -166,7 +195,7 @@ public class MinesweeperGameEntity {
   }
 
 
-  public static List<MinesweeperBoardCellEntity> getListBoardCell(MinesweeperGameEntity game, List<BoardCell> boardCells) {
+  public static List<MinesweeperBoardCellEntity> boardCellListToListMinesweeperBoardCellEntity(MinesweeperGameEntity game, List<BoardCell> boardCells) {
 
     List<MinesweeperBoardCellEntity> minesweeperBoardCellEntities = new ArrayList<>();
 

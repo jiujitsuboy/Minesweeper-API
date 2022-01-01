@@ -44,14 +44,14 @@ public class MinesweeperServiceImpl implements MinesweeperService {
   @Transactional
   public MinesweeperGameDetails createNewGame(UUID userId, int rows, int columns, int numBombs) {
 
-    if (rows < 0 || rows > 999) {
-      throw new InvalidGameParameter("Number of rows should be between 0 to 999");
+    if (rows < 0 || rows > 10) {
+      throw new InvalidGameParameter("Number of rows should be between 0 to 10");
     }
-    else if (columns < 0 || columns > 999) {
-      throw new InvalidGameParameter("Number of columns should be between 0 to 999");
+    else if (columns < 0 || columns > 10) {
+      throw new InvalidGameParameter("Number of columns should be between 0 to 10");
     }
-    else if (numBombs < 0 || numBombs > 999) {
-      throw new InvalidGameParameter("Number of bombs should be between 0 to 999");
+    else if (numBombs < 0 || numBombs > 100) {
+      throw new InvalidGameParameter("Number of bombs should be between 0 to 100");
     }
     else if (numBombs > (rows * columns)) {
       throw new InvalidGameParameter("Number of bombs can't be greater than the number of cells on the board");
@@ -108,7 +108,7 @@ public class MinesweeperServiceImpl implements MinesweeperService {
   public GameStatus openCell(UUID gameId, UUID userId, int row, int column) {
     boolean isWon = false, isGameOver = false;
     List<BoardCell> emptyBoardCells = new ArrayList<>();
-    List<MinesweeperBoardCellEntity> boardCellsEntities = new ArrayList<>();
+    List<MinesweeperBoardCellEntity> boardCellsEntitiesOpened = new ArrayList<>();
     Instant currentInstant = Instant.now();
 
     MinesweeperGameEntity minesweeperGameEntity = minesweeperRepository.findByIdAndUserId(gameId, userId)
@@ -142,7 +142,7 @@ public class MinesweeperServiceImpl implements MinesweeperService {
         BoardCell[][] board = MinesweeperGameEntity.getMatrixBoardCell(minesweeperGameEntity);
         board[row][column].setOpened(true);
         getAdjacentEmptyCells(row, column, board, emptyBoardCells);
-        boardCellsEntities = MinesweeperGameEntity.getListBoardCell(minesweeperGameEntity, emptyBoardCells);
+        boardCellsEntitiesOpened = MinesweeperGameEntity.boardCellListToListMinesweeperBoardCellEntity(minesweeperGameEntity, emptyBoardCells);
         break;
     }
 
@@ -150,20 +150,23 @@ public class MinesweeperServiceImpl implements MinesweeperService {
     int totalNumCellsGame = ((minesweeperGameEntity.getNumRows() * minesweeperGameEntity.getNumColumns())
         - minesweeperGameEntity.getNumBombs());
 
-    if (totalNumCellsOpened == totalNumCellsGame) {
+    if (!isGameOver && totalNumCellsOpened == totalNumCellsGame) {
       isWon = true;
       isGameOver = true;
     }
 
     if (isGameOver) {
       minesweeperGameEntity.setEndTime(currentInstant);
+      minesweeperGameEntity.getBoardCells().forEach(cell->cell.setOpened(true));
+      emptyBoardCells = MinesweeperGameEntity.fromMinesweeperBoardCellEntityListToBoarCellList(minesweeperGameEntity.getBoardCells());
+      boardCellsEntitiesOpened = minesweeperGameEntity.getBoardCells();
     }
     minesweeperGameEntity.setDuration(Duration.between(minesweeperGameEntity.getStartTime(), currentInstant));
     minesweeperGameEntity.setNumCellsOpened(totalNumCellsOpened);
     minesweeperGameEntity.setGameOver(isGameOver);
     minesweeperGameEntity.setWon(isWon);
 
-    minesweeperBoardCellRepository.saveAll(boardCellsEntities);
+    minesweeperBoardCellRepository.saveAll(boardCellsEntitiesOpened);
     minesweeperRepository.save(minesweeperGameEntity);
 
     return GameStatus.builder()
