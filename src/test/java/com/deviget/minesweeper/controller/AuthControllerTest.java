@@ -14,6 +14,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.deviget.minesweeper.TestConstants;
 import com.deviget.minesweeper.configuration.AppConfig;
 import com.deviget.minesweeper.entity.UserEntity;
+import com.deviget.minesweeper.exception.GenericAlreadyExistsException;
 import com.deviget.minesweeper.exception.InvalidRefreshTokenException;
 import com.deviget.minesweeper.hateoas.UserRepresentationModelAssembler;
 import com.deviget.minesweeper.model.RefreshToken;
@@ -185,5 +186,20 @@ class AuthControllerTest {
         .andExpect(jsonPath("$.firstName", is(user.getFirstName())))
         .andExpect(jsonPath("$.lastName", is(user.getLastName())))
         .andExpect(jsonPath("$.email", is(user.getEmail())));
+  }
+
+  @Test
+  public void signUpGenericAlreadyExistsException() throws Exception {
+
+    UUID userUUID = UUID.randomUUID();
+    User user = TestConstants.getTestUser(userUUID, TestConstants.USER_NAME_A, TestConstants.USER_PASSWORD_A,
+        TestConstants.USER_FIRST_NAME_A, TestConstants.USER_LAST_NAME_A, TestConstants.USER_EMAIL_A);
+
+    when(userService.signUp(any(User.class))).thenThrow(GenericAlreadyExistsException.class);
+
+    mvc.perform(post("/api/v1/auth/users")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(json.writeValueAsString(user)))
+        .andExpect(status().isConflict());
   }
 }

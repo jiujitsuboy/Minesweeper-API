@@ -81,8 +81,8 @@ public class MinesweeperServiceImpl implements MinesweeperService {
 
       }
     }
-
-    return minesweeperRepository.save(minesweeperGameEntity);
+    minesweeperRepository.save(minesweeperGameEntity);
+    return minesweeperGameEntity;
   }
 
   @Override
@@ -117,7 +117,6 @@ public class MinesweeperServiceImpl implements MinesweeperService {
 
     if (!minesweeperBoardCellEntity.isOpened()) {
       minesweeperBoardCellEntity.setOpened(true);
-      System.out.println("cellValue: " + cellValue);
 
       emptyBoardCells.add(BoardCell.builder()
           .id(minesweeperBoardCellEntity.getId())
@@ -137,7 +136,6 @@ public class MinesweeperServiceImpl implements MinesweeperService {
           BoardCell[][] board = MinesweeperGameEntity.getMatrixBoardCell(minesweeperGameEntity);
           board[row][column].setOpened(true);
           getAdjacentEmptyCells(row, column, board, emptyBoardCells);
-          System.out.println(emptyBoardCells);
           boardCellsEntitiesOpened = MinesweeperGameEntity.boardCellListToListMinesweeperBoardCellEntity(minesweeperGameEntity,
               emptyBoardCells);
           break;
@@ -181,7 +179,7 @@ public class MinesweeperServiceImpl implements MinesweeperService {
   public boolean markCell(UUID gameId, UUID userId, int row, int column, boolean flagCell) {
 
     MinesweeperBoardCellEntity minesweeperBoardCellEntity = minesweeperBoardCellRepository.findByGameIdAndRowAndColumn(gameId, row, column)
-        .orElseThrow(() -> new CellNotFoundException(""));
+        .orElseThrow(() -> new CellNotFoundException("No cell found"));
 
     minesweeperBoardCellEntity.setFlagged(flagCell);
     minesweeperBoardCellRepository.save(minesweeperBoardCellEntity);
@@ -270,7 +268,6 @@ public class MinesweeperServiceImpl implements MinesweeperService {
   private void getAdjacentEmptyCells(int row, int column, BoardCell[][] board, List<BoardCell> emptyBoardCells) {
 
     if (row - 1 > -1 && column - 1 > -1 && !board[row - 1][column - 1].isOpened() && board[row - 1][column - 1].getValue() == 0) {
-      System.out.println(String.format("row: %d, col: %d", row - 1, column - 1));
       board[row - 1][column - 1].setOpened(true);
       emptyBoardCells.add(BoardCell.builder()
           .id(board[row - 1][column - 1].getId())
@@ -284,7 +281,6 @@ public class MinesweeperServiceImpl implements MinesweeperService {
       getAdjacentEmptyCells(row - 1, column - 1, board, emptyBoardCells);
     }
     if (row - 1 > -1 && !board[row - 1][column].isOpened() && board[row - 1][column].getValue() == 0) {
-      System.out.println(String.format("row: %d, col: %d", row - 1, column));
       board[row - 1][column].setOpened(true);
       emptyBoardCells.add(BoardCell.builder()
           .id(board[row - 1][column].getId())
@@ -299,7 +295,6 @@ public class MinesweeperServiceImpl implements MinesweeperService {
     }
     if (row - 1 > -1 && column + 1 < board[0].length && !board[row - 1][column + 1].isOpened()
         && board[row - 1][column + 1].getValue() == 0) {
-      System.out.println(String.format("row: %d, col: %d", row - 1, column + 1));
       board[row - 1][column + 1].setOpened(true);
       emptyBoardCells.add(BoardCell.builder()
           .id(board[row - 1][column + 1].getId())
@@ -314,7 +309,6 @@ public class MinesweeperServiceImpl implements MinesweeperService {
     }
 
     if (row + 1 < board.length && column - 1 > -1 && !board[row + 1][column - 1].isOpened() && board[row + 1][column - 1].getValue() == 0) {
-      System.out.println(String.format("row: %d, col: %d", row + 1, column - 1));
       board[row + 1][column - 1].setOpened(true);
       emptyBoardCells.add(BoardCell.builder()
           .id(board[row + 1][column - 1].getId())
@@ -328,7 +322,6 @@ public class MinesweeperServiceImpl implements MinesweeperService {
       getAdjacentEmptyCells(row + 1, column - 1, board, emptyBoardCells);
     }
     if (row + 1 < board.length && !board[row + 1][column].isOpened() && board[row + 1][column].getValue() == 0) {
-      System.out.println(String.format("row: %d, col: %d", row + 1, column));
       board[row + 1][column].setOpened(true);
       emptyBoardCells.add(BoardCell.builder()
           .id(board[row + 1][column].getId())
@@ -343,7 +336,6 @@ public class MinesweeperServiceImpl implements MinesweeperService {
     }
     if (row + 1 < board.length && column + 1 < board[0].length && !board[row + 1][column + 1].isOpened()
         && board[row + 1][column + 1].getValue() == 0) {
-      System.out.println(String.format("row: %d, col: %d", row + 1, column + 1));
       board[row + 1][column + 1].setOpened(true);
       emptyBoardCells.add(BoardCell.builder()
           .id(board[row + 1][column + 1].getId())
@@ -358,7 +350,6 @@ public class MinesweeperServiceImpl implements MinesweeperService {
     }
 
     if (column - 1 > -1 && !board[row][column - 1].isOpened() && board[row][column - 1].getValue() == 0) {
-      System.out.println(String.format("row: %d, col: %d", row, column - 1));
       board[row][column - 1].setOpened(true);
       emptyBoardCells.add(BoardCell.builder()
           .id(board[row][column - 1].getId())
@@ -372,7 +363,6 @@ public class MinesweeperServiceImpl implements MinesweeperService {
       getAdjacentEmptyCells(row, column - 1, board, emptyBoardCells);
     }
     if (column + 1 < board[0].length && !board[row][column + 1].isOpened() && board[row][column + 1].getValue() == 0) {
-      System.out.println(String.format("row: %d, col: %d", row, column + 1));
       board[row][column + 1].setOpened(true);
       emptyBoardCells.add(BoardCell.builder()
           .id(board[row][column + 1].getId())
