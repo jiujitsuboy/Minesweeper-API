@@ -59,7 +59,7 @@ class AuthControllerTest {
 
     RefreshToken refreshTokenModel = new RefreshToken(refreshToken);
     SignedInUser signedInUser = new SignedInUser();
-    signedInUser.setUserName(userName);
+    signedInUser.setUsername(userName);
     signedInUser.setAccessToken(accessToken);
     signedInUser.setRefreshToken(refreshToken);
 
@@ -78,12 +78,12 @@ class AuthControllerTest {
   public void signIn() throws Exception {
 
     SignedInUser signedInUser = new SignedInUser();
-    signedInUser.setUserName(TestConstants.USER_NAME_A);
+    signedInUser.setUsername(TestConstants.USER_NAME_A);
     signedInUser.setAccessToken(TestConstants.ACCESS_TOKEN);
     signedInUser.setRefreshToken(TestConstants.REFRESH_TOKEN);
 
     SignInReq signInReq = new SignInReq();
-    signInReq.setUserName(TestConstants.USER_NAME_A);
+    signInReq.setUsername(TestConstants.USER_NAME_A);
     signInReq.setPassword(TestConstants.USER_PASSWORD_A);
 
     UserEntity userEntity = TestConstants.getTestUserEntity(UUID.randomUUID(), TestConstants.USER_NAME_A, TestConstants.USER_PASSWORD_A,
@@ -107,7 +107,7 @@ class AuthControllerTest {
     String password = "tiger";
 
     SignInReq signInReq = new SignInReq();
-    signInReq.setUserName(userName);
+    signInReq.setUsername(userName);
     signInReq.setPassword(password);
 
     when(userService.signUser(anyString(), anyString())).thenThrow(UsernameNotFoundException.class);
@@ -124,7 +124,7 @@ class AuthControllerTest {
     String password = "tiger";
 
     SignInReq signInReq = new SignInReq();
-    signInReq.setUserName(userName);
+    signInReq.setUsername(userName);
     signInReq.setPassword(password);
 
     when(userService.signUser(anyString(), anyString())).thenThrow(InsufficientAuthenticationException.class);

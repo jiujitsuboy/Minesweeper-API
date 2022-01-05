@@ -92,28 +92,6 @@ public class MinesweeperGameEntity {
         .build();
   }
 
-  public static MinesweeperGameEntity toEntity(MinesweeperGame minesweeperGame) {
-
-    MinesweeperGameEntity minesweeperGameEntity = MinesweeperGameEntity.builder()
-        .id(minesweeperGame.getDetails().getId())
-        .numRows(minesweeperGame.getDetails().getRows())
-        .numColumns(minesweeperGame.getDetails().getColumns())
-        .numBombs(minesweeperGame.getDetails().getNumBombs())
-        .numCellsOpened(minesweeperGame.getDetails().getNumCellsOpened())
-        .isGameOver(minesweeperGame.getDetails().isGameOver())
-        .isWon(minesweeperGame.getDetails().isWon())
-        .startTime(minesweeperGame.getDetails().getStartTime())
-        .endTime(minesweeperGame.getDetails().getEndTime())
-        .duration(Duration.ofSeconds(minesweeperGame.getDetails().getDurationInSegs()))
-        .user(UserEntity.toEntity(minesweeperGame.getDetails().getUser()))
-        .build();
-
-    minesweeperGameEntity.setBoardCells(MinesweeperGameEntity.boardCellMatrixToListMinesweeperBoardCellEntity(minesweeperGameEntity, minesweeperGame.getBoard()));
-
-    return minesweeperGameEntity;
-
-  }
-
   public static List<BoardCell> fromMinesweeperBoardCellEntityListToBoarCellList(List<MinesweeperBoardCellEntity> minesweeperBoardCellEntities){
 
     List<BoardCell> boardCells = new ArrayList<>();
@@ -129,18 +107,6 @@ public class MinesweeperGameEntity {
         .build()));
 
     return boardCells;
-  }
-
-  public static List<BoardCell> fromBoarCellMatrixToBoarCellList(MinesweeperGameEntity game, BoardCell[][] boardCells){
-
-    List<BoardCell> boardCellList = new ArrayList<>();
-
-    for (int rowIndex = 0; rowIndex < game.getNumRows(); rowIndex++) {
-      for (int columnIndex = 0; columnIndex < game.getNumColumns(); columnIndex++) {
-        boardCellList.add(boardCells[rowIndex][columnIndex]);
-      }}
-
-    return boardCellList;
   }
 
   public static BoardCell[][] getMatrixBoardCell(MinesweeperGameEntity game) {
@@ -169,31 +135,6 @@ public class MinesweeperGameEntity {
     return board;
 
   }
-
-  public static List<MinesweeperBoardCellEntity> boardCellMatrixToListMinesweeperBoardCellEntity(MinesweeperGameEntity game, BoardCell[][] boardCells) {
-
-    List<MinesweeperBoardCellEntity> minesweeperBoardCellEntities = new ArrayList<>();
-
-    for (int rowIndex = 0; rowIndex < game.getNumRows(); rowIndex++) {
-      for (int columnIndex = 0; columnIndex < game.getNumColumns(); columnIndex++) {
-
-        minesweeperBoardCellEntities.add(MinesweeperBoardCellEntity.builder()
-            .id(boardCells[rowIndex][columnIndex].getId())
-            .game(game)
-            .row(rowIndex)
-            .column(columnIndex)
-            .isFlagged(boardCells[rowIndex][columnIndex].isFlagged())
-            .isDetonated(boardCells[rowIndex][columnIndex].isDetonated())
-            .isOpened(boardCells[rowIndex][columnIndex].isOpened())
-            .value(boardCells[rowIndex][columnIndex].getValue())
-            .build());
-
-      }
-    }
-
-    return minesweeperBoardCellEntities;
-  }
-
 
   public static List<MinesweeperBoardCellEntity> boardCellListToListMinesweeperBoardCellEntity(MinesweeperGameEntity game, List<BoardCell> boardCells) {
 

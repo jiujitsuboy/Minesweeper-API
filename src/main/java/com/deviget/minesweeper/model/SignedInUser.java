@@ -1,21 +1,14 @@
 package com.deviget.minesweeper.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import java.io.Serializable;
 import java.util.UUID;
 import lombok.Data;
-import org.springframework.hateoas.RepresentationModel;
 
 @Data
-public class SignedInUser extends RepresentationModel<SignedInUser> implements Serializable {
+public class SignedInUser {
 
-  @JsonProperty("refreshToken")
   private String refreshToken;
-  @JsonProperty("accessToken")
   private String accessToken;
-  @JsonProperty("username")
-  private String userName;
-  @JsonProperty("userId")
+  private String username;
   private UUID userId;
 
 }

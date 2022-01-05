@@ -28,11 +28,4 @@ public class UserRepresentationModelAssembler extends RepresentationModelAssembl
     user.add(linkTo(methodOn(AuthController.class).signIn(signInReq)).withRel("user-signin"));
     return user;
   }
-
-//  public SignedInUser toModel(SignedInUser model) {
-//    UserEntity userEntity =  userService.findUserByUserName(model.getUserName()).get();
-//    return model.add(linkTo(methodOn(TeamController.class).getTeam(userEntity.getId().toString())).withRel("user-team"));
-//  }
-
-
 }

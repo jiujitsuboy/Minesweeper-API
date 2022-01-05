@@ -45,17 +45,4 @@ public class MinesweeperBoardCellEntity {
   private boolean isOpened;
   @Column(name = "IS_DETONATED")
   private boolean isDetonated;
-
-
-  public static MinesweeperBoardCellEntity toEntity(MinesweeperGameEntity game, BoardCell boardCell){
-    return MinesweeperBoardCellEntity.builder()
-        .row(boardCell.getRow())
-        .column(boardCell.getColumn())
-        .value(boardCell.getValue())
-        .isFlagged(boardCell.isFlagged())
-        .isOpened(boardCell.isOpened())
-        .isDetonated(boardCell.isDetonated())
-        .game(game)
-        .build();
-  }
 }

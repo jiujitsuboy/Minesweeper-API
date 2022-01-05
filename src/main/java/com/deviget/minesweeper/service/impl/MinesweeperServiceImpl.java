@@ -10,8 +10,6 @@ import com.deviget.minesweeper.exception.InvalidGameParameter;
 import com.deviget.minesweeper.exception.UserNotFoundException;
 import com.deviget.minesweeper.model.BoardCell;
 import com.deviget.minesweeper.model.GameStatus;
-import com.deviget.minesweeper.model.MinesweeperGameDetails;
-import com.deviget.minesweeper.model.MinesweeperGame;
 import com.deviget.minesweeper.repository.MinesweeperBoardCellRepository;
 import com.deviget.minesweeper.repository.MinesweeperGameRepository;
 import com.deviget.minesweeper.repository.UserRepository;
@@ -21,7 +19,8 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,18 +41,15 @@ public class MinesweeperServiceImpl implements MinesweeperService {
 
   @Override
   @Transactional
-  public MinesweeperGameDetails createNewGame(UUID userId, int rows, int columns, int numBombs) {
+  public MinesweeperGameEntity createNewGame(UUID userId, int rows, int columns, int numBombs) {
 
-    if (rows < 0 || rows > 10) {
-      throw new InvalidGameParameter("Number of rows should be between 0 to 10");
-    }
-    else if (columns < 0 || columns > 10) {
-      throw new InvalidGameParameter("Number of columns should be between 0 to 10");
-    }
-    else if (numBombs < 0 || numBombs > 100) {
+    if (rows < 1 || rows > 10) {
+      throw new InvalidGameParameter("Number of rows should be between 1 to 10");
+    } else if (columns < 1 || columns > 10) {
+      throw new InvalidGameParameter("Number of columns should be between 1 to 10");
+    } else if (numBombs < 0 || numBombs > 100) {
       throw new InvalidGameParameter("Number of bombs should be between 0 to 100");
-    }
-    else if (numBombs > (rows * columns)) {
+    } else if (numBombs > (rows * columns)) {
       throw new InvalidGameParameter("Number of bombs can't be greater than the number of cells on the board");
     }
 
@@ -86,21 +82,17 @@ public class MinesweeperServiceImpl implements MinesweeperService {
       }
     }
 
-    minesweeperGameEntity = minesweeperRepository.save(minesweeperGameEntity);
-
-    return MinesweeperGameEntity.toModel(minesweeperGameEntity).getDetails();
+    return minesweeperRepository.save(minesweeperGameEntity);
   }
 
   @Override
-  public MinesweeperGame getGameForUser(UUID gameId, UUID userId) {
-    return MinesweeperGameEntity.toModel(
-        minesweeperRepository.findByIdAndUserId(gameId, userId).orElseThrow(() -> new GameNotFoundException("No game found")));
+  public MinesweeperGameEntity getGameForUser(UUID gameId, UUID userId) {
+    return minesweeperRepository.findByIdAndUserId(gameId, userId).orElseThrow(() -> new GameNotFoundException("No game found"));
   }
 
   @Override
-  public List<MinesweeperGameDetails> getAllGamesForUser(UUID userId) {
-    List<MinesweeperGameEntity> minesweeperGameEntities = minesweeperRepository.findAllByUserId(userId);
-    return minesweeperGameEntities.stream().map(entity -> MinesweeperGameEntity.toModel(entity).getDetails()).collect(Collectors.toList());
+  public Page<MinesweeperGameEntity> getAllGamesForUser(UUID userId, Pageable pageable) {
+    return minesweeperRepository.findAllByUserId(userId, pageable);
   }
 
   @Override
@@ -121,53 +113,59 @@ public class MinesweeperServiceImpl implements MinesweeperService {
     MinesweeperBoardCellEntity minesweeperBoardCellEntity = minesweeperBoardCellRepository.findByGameIdAndRowAndColumn(gameId, row, column)
         .orElseThrow(() -> new CellNotFoundException("No cell found"));
 
-    minesweeperBoardCellEntity.setOpened(true);
     int cellValue = minesweeperBoardCellEntity.getValue();
 
-    emptyBoardCells.add(BoardCell.builder()
-        .id(minesweeperBoardCellEntity.getId())
-        .row(row)
-        .column(column)
-        .value(cellValue)
-        .isFlagged(minesweeperBoardCellEntity.isFlagged())
-        .isDetonated(cellValue == -1)
-        .isOpened(true)
-        .build());
+    if (!minesweeperBoardCellEntity.isOpened()) {
+      minesweeperBoardCellEntity.setOpened(true);
+      System.out.println("cellValue: " + cellValue);
 
-    switch (cellValue) {
-      case -1:
+      emptyBoardCells.add(BoardCell.builder()
+          .id(minesweeperBoardCellEntity.getId())
+          .row(row)
+          .column(column)
+          .value(cellValue)
+          .isFlagged(minesweeperBoardCellEntity.isFlagged())
+          .isDetonated(cellValue == -1)
+          .isOpened(true)
+          .build());
+
+      switch (cellValue) {
+        case -1:
+          isGameOver = true;
+          break;
+        case 0:
+          BoardCell[][] board = MinesweeperGameEntity.getMatrixBoardCell(minesweeperGameEntity);
+          board[row][column].setOpened(true);
+          getAdjacentEmptyCells(row, column, board, emptyBoardCells);
+          System.out.println(emptyBoardCells);
+          boardCellsEntitiesOpened = MinesweeperGameEntity.boardCellListToListMinesweeperBoardCellEntity(minesweeperGameEntity,
+              emptyBoardCells);
+          break;
+      }
+
+      int totalNumCellsOpened = minesweeperGameEntity.getNumCellsOpened() + emptyBoardCells.size();
+      int totalNumCellsGame = ((minesweeperGameEntity.getNumRows() * minesweeperGameEntity.getNumColumns())
+          - minesweeperGameEntity.getNumBombs());
+
+      if (!isGameOver && totalNumCellsOpened == totalNumCellsGame) {
+        isWon = true;
         isGameOver = true;
-        break;
-      case 0:
-        BoardCell[][] board = MinesweeperGameEntity.getMatrixBoardCell(minesweeperGameEntity);
-        board[row][column].setOpened(true);
-        getAdjacentEmptyCells(row, column, board, emptyBoardCells);
-        boardCellsEntitiesOpened = MinesweeperGameEntity.boardCellListToListMinesweeperBoardCellEntity(minesweeperGameEntity, emptyBoardCells);
-        break;
+      }
+
+      if (isGameOver) {
+        minesweeperGameEntity.setEndTime(currentInstant);
+        minesweeperGameEntity.getBoardCells().forEach(cell -> cell.setOpened(true));
+        emptyBoardCells = MinesweeperGameEntity.fromMinesweeperBoardCellEntityListToBoarCellList(minesweeperGameEntity.getBoardCells());
+        boardCellsEntitiesOpened = minesweeperGameEntity.getBoardCells();
+      }
+      minesweeperGameEntity.setDuration(Duration.between(minesweeperGameEntity.getStartTime(), currentInstant));
+      minesweeperGameEntity.setNumCellsOpened(totalNumCellsOpened);
+      minesweeperGameEntity.setGameOver(isGameOver);
+      minesweeperGameEntity.setWon(isWon);
+
+      minesweeperBoardCellRepository.saveAll(boardCellsEntitiesOpened);
+      minesweeperRepository.save(minesweeperGameEntity);
     }
-
-    int totalNumCellsOpened = minesweeperGameEntity.getNumCellsOpened() + emptyBoardCells.size();
-    int totalNumCellsGame = ((minesweeperGameEntity.getNumRows() * minesweeperGameEntity.getNumColumns())
-        - minesweeperGameEntity.getNumBombs());
-
-    if (!isGameOver && totalNumCellsOpened == totalNumCellsGame) {
-      isWon = true;
-      isGameOver = true;
-    }
-
-    if (isGameOver) {
-      minesweeperGameEntity.setEndTime(currentInstant);
-      minesweeperGameEntity.getBoardCells().forEach(cell->cell.setOpened(true));
-      emptyBoardCells = MinesweeperGameEntity.fromMinesweeperBoardCellEntityListToBoarCellList(minesweeperGameEntity.getBoardCells());
-      boardCellsEntitiesOpened = minesweeperGameEntity.getBoardCells();
-    }
-    minesweeperGameEntity.setDuration(Duration.between(minesweeperGameEntity.getStartTime(), currentInstant));
-    minesweeperGameEntity.setNumCellsOpened(totalNumCellsOpened);
-    minesweeperGameEntity.setGameOver(isGameOver);
-    minesweeperGameEntity.setWon(isWon);
-
-    minesweeperBoardCellRepository.saveAll(boardCellsEntitiesOpened);
-    minesweeperRepository.save(minesweeperGameEntity);
 
     return GameStatus.builder()
         .gameId(gameId)

@@ -52,7 +52,7 @@ public class AuthController {
       @ApiResponse(code = 401, message = "Insufficient Authentication Exception.")})
   @PostMapping(value = "/token")
   public ResponseEntity<?> signIn(@Valid @RequestBody(required = false) SignInReq signInReq) {
-      return status(HttpStatus.ACCEPTED).body(service.signUser(signInReq.getUserName(), signInReq.getPassword()));
+      return status(HttpStatus.ACCEPTED).body(service.signUser(signInReq.getUsername(), signInReq.getPassword()));
   }
 
   @ApiOperation(value = "SignOut user", nickname = "signOut", notes = "Sign out an User and destroy the refresh token-")
@@ -69,7 +69,7 @@ public class AuthController {
   @ApiResponses(value = {
       @ApiResponse(code = 201, message = "SignUp user and create his team."),
       @ApiResponse(code = 409, message = "Generic Already Exists Exception.")})
-  @PostMapping(value = "/users")
+    @PostMapping(value = "/users")
   public ResponseEntity<User> signUp(@Valid @RequestBody(required = false) User user) {
     return status(HttpStatus.CREATED).body(userAssembler.toModel(service.signUp(user)));
   }

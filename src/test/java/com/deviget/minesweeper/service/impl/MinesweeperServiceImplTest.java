@@ -2,6 +2,7 @@ package com.deviget.minesweeper.service.impl;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import com.deviget.minesweeper.entity.MinesweeperGameEntity;
 import com.deviget.minesweeper.model.MinesweeperGameDetails;
 import com.deviget.minesweeper.service.MinesweeperService;
 import java.util.UUID;
@@ -28,11 +29,11 @@ class MinesweeperServiceImplTest {
     int columns = 4;
     int bombs = 5;
 
-    MinesweeperGameDetails minesweeperGame = minesweeperService.createNewGame(UUID.randomUUID(), rows, columns, bombs);
+    MinesweeperGameEntity minesweeperGame = minesweeperService.createNewGame(UUID.randomUUID(), rows, columns, bombs);
 
     assertNotNull(minesweeperGame);
-    assertEquals(minesweeperGame.getRows(),rows);
-    assertEquals(minesweeperGame.getColumns(),columns);
+    assertEquals(minesweeperGame.getNumRows(),rows);
+    assertEquals(minesweeperGame.getNumColumns(),columns);
     assertEquals(minesweeperGame.getNumBombs(),bombs);
   }
 

@@ -1,18 +1,18 @@
 package com.deviget.minesweeper.model;
 
-import java.time.Duration;
 import java.time.Instant;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.hateoas.RepresentationModel;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class MinesweeperGameDetails {
+public class MinesweeperGameDetails extends RepresentationModel<MinesweeperGameDetails> {
 
   private UUID id;
   private User user;

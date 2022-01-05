@@ -128,7 +128,7 @@ public class UserServiceImpl implements UserService {
 
     SignedInUser signedInUser = new SignedInUser();
     signedInUser.setUserId(userEntity.getId());
-    signedInUser.setUserName(userEntity.getUsername());
+    signedInUser.setUsername(userEntity.getUsername());
     signedInUser.setAccessToken(token);
 
     return signedInUser;

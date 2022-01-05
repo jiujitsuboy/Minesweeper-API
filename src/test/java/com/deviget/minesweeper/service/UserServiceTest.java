@@ -117,7 +117,7 @@ class UserServiceTest {
 
     assertNotNull(returnedSignedInUser);
     assertNotNull(returnedSignedInUser.getRefreshToken());
-    assertEquals(returnedSignedInUser.getUserName(), userEntity.getUsername());
+    assertEquals(returnedSignedInUser.getUsername(), userEntity.getUsername());
     assertEquals(returnedSignedInUser.getAccessToken(), accessToken);
 
   }
@@ -186,11 +186,11 @@ class UserServiceTest {
     Optional<SignedInUser> returnedOptionalSignedInUser = classUnderTest.getAccessToken(refreshTokenModel);
 
     assertTrue(returnedOptionalSignedInUser.isPresent());
-    assertEquals(returnedOptionalSignedInUser.get().getUserName(), TestConstants.USER_NAME_A);
+    assertEquals(returnedOptionalSignedInUser.get().getUsername(), TestConstants.USER_NAME_A);
     assertEquals(returnedOptionalSignedInUser.get().getAccessToken(), TestConstants.ACCESS_TOKEN);
     assertEquals(returnedOptionalSignedInUser.get().getRefreshToken(), TestConstants.REFRESH_TOKEN);
     assertNotNull(userTokenEntity.getId());
-    assertEquals(returnedOptionalSignedInUser.get().getUserName(),userTokenEntity.getUser().getUsername());
+    assertEquals(returnedOptionalSignedInUser.get().getUsername(),userTokenEntity.getUser().getUsername());
     assertEquals(returnedOptionalSignedInUser.get().getRefreshToken(),userTokenEntity.getRefreshToken());
   }
 
