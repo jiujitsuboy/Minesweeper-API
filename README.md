@@ -19,8 +19,8 @@ The following list depict the available endpoints of the API:
 
 1. Authentication
 
-   * [User Sign Up (POST)](http://localhost:8082/api/v1/auth/users)
-                
+   * [User Sign Up (POST)](http://localhost:8082/api/v1/auth/users) : *Allow to create a new user in the system.*
+                   
      Request:
 
        ```
@@ -56,7 +56,7 @@ The following list depict the available endpoints of the API:
              "role": "ROLE_ADMIN"
          }
        ```
-   * [User Sign In (POST)](http://localhost:8082/api/v1/auth/token)
+   * [User Sign In (POST)](http://localhost:8082/api/v1/auth/token): *Allow user Authentication.*
 
      Request:
 
@@ -84,7 +84,7 @@ The following list depict the available endpoints of the API:
              "userId": "443fc613-430e-42eb-8ba8-6709a803cb45"
         }       
 
-   * [User Refresh Tokens (POST)](http://localhost:8082/api/v1/auth/token/refresh)
+   * [User Refresh Tokens (POST)](http://localhost:8082/api/v1/auth/token/refresh): *Allow refresh the JWT access token.*
 
      Request:
    
@@ -106,7 +106,7 @@ The following list depict the available endpoints of the API:
              "userId": "443fc613-430e-42eb-8ba8-6709a803cb45"
            }
    
-   * [User Sign Out (DELETE)](http://localhost:8082/api/v1/auth/token)
+   * [User Sign Out (DELETE)](http://localhost:8082/api/v1/auth/token): *Allow ending the user session.*
 
      Request:
 
@@ -123,7 +123,7 @@ The following list depict the available endpoints of the API:
           No content
        ```
 2. Game
-   * [Create new game (POST)](http://localhost:8082/api/v1/game/)
+   * [Create New Game (POST)](http://localhost:8082/api/v1/game/): *Create new custom board game.*
 
      Request:
 
@@ -175,7 +175,7 @@ The following list depict the available endpoints of the API:
                     ]
         }
        ```
-   * [Get game for user (GET)](http://localhost:8082/api/v1/game/{{userId}}/{{gameId}})
+   * [Get Game Of User (GET)](http://localhost:8082/api/v1/game/{{userId}}/{{gameId}}): *Retrieve specific game's board of the login user.*
 
      Request:
 
@@ -307,7 +307,7 @@ The following list depict the available endpoints of the API:
                     ]
          }
        ```
-   * [Get all user games (GET)](http://localhost:8082/api/v1/game/{{userId}}?page=1&size=1)
+   * [Get All User's Games (GET)](http://localhost:8082/api/v1/game/{{userId}}?page=1&size=1): *Retrieve all the games created by the user.*
 
      Request:
 
@@ -383,7 +383,7 @@ The following list depict the available endpoints of the API:
                    }
          }
        ```
-   * [Open cell (PATCH)](http://localhost:8082/api/v1/game/cell)
+   * [Open Cell (PATCH)](http://localhost:8082/api/v1/game/cell): *Reveals the content of a cell in the playing board.*
 
      Request:
 
@@ -420,7 +420,7 @@ The following list depict the available endpoints of the API:
             "won": false
          }
        ```
-     * [Flag Cell (PATCH)](http://localhost:8082/api/v1/game/cell/flagged)
+     * [Flag Cell (PATCH)](http://localhost:8082/api/v1/game/cell/flagged): *Flagged/Unflagged a cell in the playing board.*
 
        Request:
 
@@ -445,7 +445,8 @@ The following list depict the available endpoints of the API:
 
 * Java/Spring boot maven project.
 * In memory DB (H2)
-* Oauth2 Authentication/Authorization
+* Spring Oauth2 Authentication/Authorization
+* JWT token
 * Hateoas support
 * Etag support
 * [Swagger documentation](http://localhost:8082/v2/api-docs) and [Swagger UI](http://localhost:8082/swagger-ui.html)
