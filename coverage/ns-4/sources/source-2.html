@@ -1,0 +1,294 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > MinesweeperGameEntity</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/highlight-idea.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.pack.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.deviget.minesweeper.entity</a>
+</div>
+
+<h1>Coverage Summary for Class: MinesweeperGameEntity (com.deviget.minesweeper.entity)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">MinesweeperGameEntity</td>
+<td class="coverageStat">
+  <span class="percent">
+    95,7%
+  </span>
+  <span class="absValue">
+    (22/23)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    98,6%
+  </span>
+  <span class="absValue">
+    (73/74)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">MinesweeperGameEntity$HibernateProxy$h8NGOEGg</td>
+  </tr>
+  <tr>
+    <td class="name">MinesweeperGameEntity$HibernateProxy$I84mFNHr</td>
+  </tr>
+  <tr>
+    <td class="name">MinesweeperGameEntity$MinesweeperGameEntityBuilder</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    95,8%
+  </span>
+  <span class="absValue">
+    (23/24)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    98,7%
+  </span>
+  <span class="absValue">
+    (74/75)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<div class="sourceCode" id="sourceCode"><i class="no-highlight">1</i>&nbsp;package com.deviget.minesweeper.entity;
+<i class="no-highlight">2</i>&nbsp;
+<i class="no-highlight">3</i>&nbsp;import com.deviget.minesweeper.model.BoardCell;
+<i class="no-highlight">4</i>&nbsp;import com.deviget.minesweeper.model.MinesweeperGameDetails;
+<i class="no-highlight">5</i>&nbsp;import com.deviget.minesweeper.model.MinesweeperGame;
+<i class="no-highlight">6</i>&nbsp;import java.time.Duration;
+<i class="no-highlight">7</i>&nbsp;import java.time.Instant;
+<i class="no-highlight">8</i>&nbsp;import java.util.ArrayList;
+<i class="no-highlight">9</i>&nbsp;import java.util.List;
+<i class="no-highlight">10</i>&nbsp;import java.util.UUID;
+<i class="no-highlight">11</i>&nbsp;import javax.persistence.CascadeType;
+<i class="no-highlight">12</i>&nbsp;import javax.persistence.Column;
+<i class="no-highlight">13</i>&nbsp;import javax.persistence.Entity;
+<i class="no-highlight">14</i>&nbsp;import javax.persistence.FetchType;
+<i class="no-highlight">15</i>&nbsp;import javax.persistence.GeneratedValue;
+<i class="no-highlight">16</i>&nbsp;import javax.persistence.Id;
+<i class="no-highlight">17</i>&nbsp;import javax.persistence.ManyToOne;
+<i class="no-highlight">18</i>&nbsp;import javax.persistence.OneToMany;
+<i class="no-highlight">19</i>&nbsp;import javax.persistence.Table;
+<i class="no-highlight">20</i>&nbsp;import lombok.AllArgsConstructor;
+<i class="no-highlight">21</i>&nbsp;import lombok.Builder;
+<i class="no-highlight">22</i>&nbsp;import lombok.Data;
+<i class="no-highlight">23</i>&nbsp;import lombok.NoArgsConstructor;
+<i class="no-highlight">24</i>&nbsp;
+<i class="no-highlight">25</i>&nbsp;@Entity
+<i class="no-highlight">26</i>&nbsp;@Table(name = &quot;game&quot;)
+<b class="fc"><i class="no-highlight">27</i>&nbsp;@Data</b>
+<b class="fc"><i class="no-highlight">28</i>&nbsp;@NoArgsConstructor</b>
+<b class="fc"><i class="no-highlight">29</i>&nbsp;@AllArgsConstructor</b>
+<b class="fc"><i class="no-highlight">30</i>&nbsp;@Builder</b>
+<i class="no-highlight">31</i>&nbsp;public class MinesweeperGameEntity {
+<i class="no-highlight">32</i>&nbsp;
+<i class="no-highlight">33</i>&nbsp;  @Id
+<i class="no-highlight">34</i>&nbsp;  @GeneratedValue
+<i class="no-highlight">35</i>&nbsp;  @Column(name = &quot;ID&quot;, updatable = false, nullable = false)
+<b class="fc"><i class="no-highlight">36</i>&nbsp;  private UUID id;</b>
+<i class="no-highlight">37</i>&nbsp;
+<i class="no-highlight">38</i>&nbsp;  @ManyToOne(fetch = FetchType.LAZY, optional = false)
+<b class="fc"><i class="no-highlight">39</i>&nbsp;  private UserEntity user;</b>
+<i class="no-highlight">40</i>&nbsp;
+<i class="no-highlight">41</i>&nbsp;  @Column(name = &quot;NUM_ROWS&quot;)
+<b class="fc"><i class="no-highlight">42</i>&nbsp;  private int numRows;</b>
+<i class="no-highlight">43</i>&nbsp;
+<i class="no-highlight">44</i>&nbsp;  @Column(name = &quot;NUM_COLUMNS&quot;)
+<b class="fc"><i class="no-highlight">45</i>&nbsp;  private int numColumns;</b>
+<i class="no-highlight">46</i>&nbsp;
+<i class="no-highlight">47</i>&nbsp;  @Column(name = &quot;NUM_BOMBS&quot;)
+<b class="fc"><i class="no-highlight">48</i>&nbsp;  private int numBombs;</b>
+<i class="no-highlight">49</i>&nbsp;
+<i class="no-highlight">50</i>&nbsp;  @Column(name = &quot;NUM_CELLS_OPENED&quot;)
+<b class="fc"><i class="no-highlight">51</i>&nbsp;  private int numCellsOpened;</b>
+<i class="no-highlight">52</i>&nbsp;
+<i class="no-highlight">53</i>&nbsp;  @Column(name = &quot;START_TIME&quot;)
+<b class="fc"><i class="no-highlight">54</i>&nbsp;  private Instant startTime;</b>
+<i class="no-highlight">55</i>&nbsp;
+<i class="no-highlight">56</i>&nbsp;  @Column(name = &quot;END_TIME&quot;)
+<b class="fc"><i class="no-highlight">57</i>&nbsp;  private Instant endTime;</b>
+<i class="no-highlight">58</i>&nbsp;
+<i class="no-highlight">59</i>&nbsp;  @Column(name = &quot;DURATION&quot;)
+<b class="fc"><i class="no-highlight">60</i>&nbsp;  private Duration duration;</b>
+<i class="no-highlight">61</i>&nbsp;
+<i class="no-highlight">62</i>&nbsp;  @Column(name = &quot;IS_GAME_OVER&quot;)
+<b class="fc"><i class="no-highlight">63</i>&nbsp;  private boolean isGameOver;</b>
+<i class="no-highlight">64</i>&nbsp;
+<i class="no-highlight">65</i>&nbsp;  @Column(name = &quot;IS_WON&quot;)
+<b class="nc"><i class="no-highlight">66</i>&nbsp;  private boolean isWon;</b>
+<i class="no-highlight">67</i>&nbsp;
+<i class="no-highlight">68</i>&nbsp;  @OneToMany(mappedBy = &quot;game&quot;, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+<b class="fc"><i class="no-highlight">69</i>&nbsp;  List&lt;MinesweeperBoardCellEntity&gt; boardCells;</b>
+<i class="no-highlight">70</i>&nbsp;
+<i class="no-highlight">71</i>&nbsp;  public static MinesweeperGame toModel(MinesweeperGameEntity minesweeperGameEntity) {
+<i class="no-highlight">72</i>&nbsp;
+<b class="fc"><i class="no-highlight">73</i>&nbsp;    MinesweeperGameDetails minesweeperDetails = MinesweeperGameDetails.builder()</b>
+<b class="fc"><i class="no-highlight">74</i>&nbsp;        .id(minesweeperGameEntity.getId())</b>
+<b class="fc"><i class="no-highlight">75</i>&nbsp;        .rows(minesweeperGameEntity.getNumRows())</b>
+<b class="fc"><i class="no-highlight">76</i>&nbsp;        .columns(minesweeperGameEntity.getNumColumns())</b>
+<b class="fc"><i class="no-highlight">77</i>&nbsp;        .numBombs(minesweeperGameEntity.getNumBombs())</b>
+<b class="fc"><i class="no-highlight">78</i>&nbsp;        .numCellsOpened(minesweeperGameEntity.getNumCellsOpened())</b>
+<b class="fc"><i class="no-highlight">79</i>&nbsp;        .isGameOver(minesweeperGameEntity.isGameOver)</b>
+<b class="fc"><i class="no-highlight">80</i>&nbsp;        .isWon(minesweeperGameEntity.isWon)</b>
+<b class="fc"><i class="no-highlight">81</i>&nbsp;        .startTime(minesweeperGameEntity.getStartTime())</b>
+<b class="fc"><i class="no-highlight">82</i>&nbsp;        .endTime(minesweeperGameEntity.getEndTime())</b>
+<b class="fc"><i class="no-highlight">83</i>&nbsp;        .durationInSegs(minesweeperGameEntity.getDuration().toSeconds())</b>
+<b class="fc"><i class="no-highlight">84</i>&nbsp;        .user(UserEntity.toModel(minesweeperGameEntity.getUser()))</b>
+<b class="fc"><i class="no-highlight">85</i>&nbsp;        .build();</b>
+<i class="no-highlight">86</i>&nbsp;
+<b class="fc"><i class="no-highlight">87</i>&nbsp;    BoardCell[][] board = MinesweeperGameEntity.getMatrixBoardCell(minesweeperGameEntity);</b>
+<i class="no-highlight">88</i>&nbsp;
+<b class="fc"><i class="no-highlight">89</i>&nbsp;    return MinesweeperGame.builder()</b>
+<b class="fc"><i class="no-highlight">90</i>&nbsp;        .details(minesweeperDetails)</b>
+<b class="fc"><i class="no-highlight">91</i>&nbsp;        .board(board)</b>
+<b class="fc"><i class="no-highlight">92</i>&nbsp;        .build();</b>
+<i class="no-highlight">93</i>&nbsp;  }
+<i class="no-highlight">94</i>&nbsp;
+<i class="no-highlight">95</i>&nbsp;  public static List&lt;BoardCell&gt; fromMinesweeperBoardCellEntityListToBoarCellList(List&lt;MinesweeperBoardCellEntity&gt; minesweeperBoardCellEntities){
+<i class="no-highlight">96</i>&nbsp;
+<b class="fc"><i class="no-highlight">97</i>&nbsp;    List&lt;BoardCell&gt; boardCells = new ArrayList&lt;&gt;();</b>
+<i class="no-highlight">98</i>&nbsp;
+<b class="fc"><i class="no-highlight">99</i>&nbsp;    minesweeperBoardCellEntities.stream().forEach(cell -&gt; boardCells.add(BoardCell.builder()</b>
+<b class="fc"><i class="no-highlight">100</i>&nbsp;        .id(cell.getId())</b>
+<b class="fc"><i class="no-highlight">101</i>&nbsp;        .row(cell.getRow())</b>
+<b class="fc"><i class="no-highlight">102</i>&nbsp;        .column(cell.getColumn())</b>
+<b class="fc"><i class="no-highlight">103</i>&nbsp;        .value(cell.getValue())</b>
+<b class="fc"><i class="no-highlight">104</i>&nbsp;        .isFlagged(cell.isFlagged())</b>
+<b class="fc"><i class="no-highlight">105</i>&nbsp;        .isOpened(cell.isOpened())</b>
+<b class="fc"><i class="no-highlight">106</i>&nbsp;        .isDetonated(cell.isDetonated())</b>
+<b class="fc"><i class="no-highlight">107</i>&nbsp;        .build()));</b>
+<i class="no-highlight">108</i>&nbsp;
+<b class="fc"><i class="no-highlight">109</i>&nbsp;    return boardCells;</b>
+<i class="no-highlight">110</i>&nbsp;  }
+<i class="no-highlight">111</i>&nbsp;
+<i class="no-highlight">112</i>&nbsp;  public static BoardCell[][] getMatrixBoardCell(MinesweeperGameEntity game) {
+<i class="no-highlight">113</i>&nbsp;
+<b class="fc"><i class="no-highlight">114</i>&nbsp;    BoardCell[][] board = null;</b>
+<b class="fc"><i class="no-highlight">115</i>&nbsp;    int rows = game.getNumRows();</b>
+<b class="fc"><i class="no-highlight">116</i>&nbsp;    int columns = game.getNumColumns();</b>
+<b class="fc"><i class="no-highlight">117</i>&nbsp;    List&lt;MinesweeperBoardCellEntity&gt; minesweeperBoardCellEntities = game.getBoardCells();</b>
+<i class="no-highlight">118</i>&nbsp;
+<b class="fc"><i class="no-highlight">119</i>&nbsp;    if (rows * columns == minesweeperBoardCellEntities.size()) {</b>
+<b class="fc"><i class="no-highlight">120</i>&nbsp;      BoardCell[][] tempBoard = new BoardCell[rows][columns];</b>
+<i class="no-highlight">121</i>&nbsp;
+<b class="fc"><i class="no-highlight">122</i>&nbsp;      minesweeperBoardCellEntities.stream().forEach(cell -&gt; tempBoard[cell.getRow()][cell.getColumn()] = BoardCell.builder()</b>
+<b class="fc"><i class="no-highlight">123</i>&nbsp;          .id(cell.getId())</b>
+<b class="fc"><i class="no-highlight">124</i>&nbsp;          .row(cell.getRow())</b>
+<b class="fc"><i class="no-highlight">125</i>&nbsp;          .column(cell.getColumn())</b>
+<b class="fc"><i class="no-highlight">126</i>&nbsp;          .value(cell.getValue())</b>
+<b class="fc"><i class="no-highlight">127</i>&nbsp;          .isFlagged(cell.isFlagged())</b>
+<b class="fc"><i class="no-highlight">128</i>&nbsp;          .isOpened(cell.isOpened())</b>
+<b class="fc"><i class="no-highlight">129</i>&nbsp;          .isDetonated(cell.isDetonated())</b>
+<b class="fc"><i class="no-highlight">130</i>&nbsp;          .build());</b>
+<i class="no-highlight">131</i>&nbsp;
+<b class="fc"><i class="no-highlight">132</i>&nbsp;      board = tempBoard;</b>
+<i class="no-highlight">133</i>&nbsp;    }
+<i class="no-highlight">134</i>&nbsp;
+<b class="fc"><i class="no-highlight">135</i>&nbsp;    return board;</b>
+<i class="no-highlight">136</i>&nbsp;
+<i class="no-highlight">137</i>&nbsp;  }
+<i class="no-highlight">138</i>&nbsp;
+<i class="no-highlight">139</i>&nbsp;  public static List&lt;MinesweeperBoardCellEntity&gt; boardCellListToListMinesweeperBoardCellEntity(MinesweeperGameEntity game, List&lt;BoardCell&gt; boardCells) {
+<i class="no-highlight">140</i>&nbsp;
+<b class="fc"><i class="no-highlight">141</i>&nbsp;    List&lt;MinesweeperBoardCellEntity&gt; minesweeperBoardCellEntities = new ArrayList&lt;&gt;();</b>
+<i class="no-highlight">142</i>&nbsp;
+<i class="no-highlight">143</i>&nbsp;
+<b class="fc"><i class="no-highlight">144</i>&nbsp;    boardCells.stream().forEach(boardCell -&gt; minesweeperBoardCellEntities.add(MinesweeperBoardCellEntity.builder()</b>
+<b class="fc"><i class="no-highlight">145</i>&nbsp;        .id(boardCell.getId())</b>
+<b class="fc"><i class="no-highlight">146</i>&nbsp;        .game(game)</b>
+<b class="fc"><i class="no-highlight">147</i>&nbsp;        .row(boardCell.getRow())</b>
+<b class="fc"><i class="no-highlight">148</i>&nbsp;        .column(boardCell.getColumn())</b>
+<b class="fc"><i class="no-highlight">149</i>&nbsp;        .isFlagged(boardCell.isFlagged())</b>
+<b class="fc"><i class="no-highlight">150</i>&nbsp;        .value(boardCell.getValue())</b>
+<b class="fc"><i class="no-highlight">151</i>&nbsp;        .isOpened(boardCell.isOpened())</b>
+<b class="fc"><i class="no-highlight">152</i>&nbsp;        .isDetonated(boardCell.isDetonated())</b>
+<b class="fc"><i class="no-highlight">153</i>&nbsp;        .build()));</b>
+<i class="no-highlight">154</i>&nbsp;
+<b class="fc"><i class="no-highlight">155</i>&nbsp;    return minesweeperBoardCellEntities;</b>
+<i class="no-highlight">156</i>&nbsp;  }
+<i class="no-highlight">157</i>&nbsp;}
+</div>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+        var codeBlock = document.getElementById('sourceCode');
+
+        if (codeBlock) {
+            hljs.highlightBlock(codeBlock);
+        }
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-01-05 23:36</div>
+</div>
+</body>
+</html>

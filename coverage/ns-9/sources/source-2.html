@@ -1,0 +1,292 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > UserServiceImpl</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/highlight-idea.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.pack.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.deviget.minesweeper.service.impl</a>
+</div>
+
+<h1>Coverage Summary for Class: UserServiceImpl (com.deviget.minesweeper.service.impl)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">UserServiceImpl</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (14/14)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (57/57)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">UserServiceImpl$$EnhancerBySpringCGLIB$$f270330a</td>
+  </tr>
+  <tr>
+    <td class="name">UserServiceImpl$RandomHolder</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (2/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (3/3)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (16/16)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (60/60)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<div class="sourceCode" id="sourceCode"><i class="no-highlight">1</i>&nbsp;package com.deviget.minesweeper.service.impl;
+<i class="no-highlight">2</i>&nbsp;
+<i class="no-highlight">3</i>&nbsp;import com.deviget.minesweeper.entity.RoleEnum;
+<i class="no-highlight">4</i>&nbsp;import com.deviget.minesweeper.entity.UserEntity;
+<i class="no-highlight">5</i>&nbsp;import com.deviget.minesweeper.entity.UserTokenEntity;
+<i class="no-highlight">6</i>&nbsp;import com.deviget.minesweeper.exception.GenericAlreadyExistsException;
+<i class="no-highlight">7</i>&nbsp;import com.deviget.minesweeper.exception.InvalidRefreshTokenException;
+<i class="no-highlight">8</i>&nbsp;import com.deviget.minesweeper.model.RefreshToken;
+<i class="no-highlight">9</i>&nbsp;import com.deviget.minesweeper.model.SignedInUser;
+<i class="no-highlight">10</i>&nbsp;import com.deviget.minesweeper.model.User;
+<i class="no-highlight">11</i>&nbsp;import com.deviget.minesweeper.repository.UserRepository;
+<i class="no-highlight">12</i>&nbsp;import com.deviget.minesweeper.repository.UserTokenRepository;
+<i class="no-highlight">13</i>&nbsp;import com.deviget.minesweeper.security.JwtManager;
+<i class="no-highlight">14</i>&nbsp;import com.deviget.minesweeper.service.UserService;
+<i class="no-highlight">15</i>&nbsp;import java.math.BigInteger;
+<i class="no-highlight">16</i>&nbsp;import java.security.SecureRandom;
+<i class="no-highlight">17</i>&nbsp;import java.util.Objects;
+<i class="no-highlight">18</i>&nbsp;import java.util.Optional;
+<i class="no-highlight">19</i>&nbsp;import java.util.Random;
+<i class="no-highlight">20</i>&nbsp;import org.apache.logging.log4j.util.Strings;
+<i class="no-highlight">21</i>&nbsp;import org.springframework.security.authentication.InsufficientAuthenticationException;
+<i class="no-highlight">22</i>&nbsp;import org.springframework.security.core.userdetails.UsernameNotFoundException;
+<i class="no-highlight">23</i>&nbsp;import org.springframework.security.crypto.password.PasswordEncoder;
+<i class="no-highlight">24</i>&nbsp;import org.springframework.stereotype.Service;
+<i class="no-highlight">25</i>&nbsp;import org.springframework.transaction.annotation.Transactional;
+<i class="no-highlight">26</i>&nbsp;
+<i class="no-highlight">27</i>&nbsp;@Service
+<i class="no-highlight">28</i>&nbsp;public class UserServiceImpl implements UserService {
+<i class="no-highlight">29</i>&nbsp;
+<i class="no-highlight">30</i>&nbsp;  private final UserRepository userRepository;
+<i class="no-highlight">31</i>&nbsp;  private final UserTokenRepository userTokenRepository;
+<i class="no-highlight">32</i>&nbsp;  private final PasswordEncoder bCryptPasswordEncoder;
+<i class="no-highlight">33</i>&nbsp;  private final JwtManager tokenManager;
+<i class="no-highlight">34</i>&nbsp;
+<i class="no-highlight">35</i>&nbsp;  public UserServiceImpl(UserRepository userRepository, UserTokenRepository userTokenRepository,
+<i class="no-highlight">36</i>&nbsp;      PasswordEncoder bCryptPasswordEncoder, JwtManager tokenManager
+<b class="fc"><i class="no-highlight">37</i>&nbsp;  ) {</b>
+<b class="fc"><i class="no-highlight">38</i>&nbsp;    this.userRepository = userRepository;</b>
+<b class="fc"><i class="no-highlight">39</i>&nbsp;    this.userTokenRepository = userTokenRepository;</b>
+<b class="fc"><i class="no-highlight">40</i>&nbsp;    this.bCryptPasswordEncoder = bCryptPasswordEncoder;</b>
+<b class="fc"><i class="no-highlight">41</i>&nbsp;    this.tokenManager = tokenManager;</b>
+<i class="no-highlight">42</i>&nbsp;  }
+<i class="no-highlight">43</i>&nbsp;
+<i class="no-highlight">44</i>&nbsp;  @Override
+<i class="no-highlight">45</i>&nbsp;  public UserEntity signUp(User user) {
+<b class="fc"><i class="no-highlight">46</i>&nbsp;    return createUser(user);</b>
+<i class="no-highlight">47</i>&nbsp;  }
+<i class="no-highlight">48</i>&nbsp;
+<i class="no-highlight">49</i>&nbsp;  @Override
+<i class="no-highlight">50</i>&nbsp;  @Transactional
+<i class="no-highlight">51</i>&nbsp;  public SignedInUser signUser(String username, String password) {
+<i class="no-highlight">52</i>&nbsp;
+<b class="fc"><i class="no-highlight">53</i>&nbsp;    if (Strings.isBlank(username)) {</b>
+<b class="fc"><i class="no-highlight">54</i>&nbsp;      throw new UsernameNotFoundException(&quot;Invalid user.&quot;);</b>
+<i class="no-highlight">55</i>&nbsp;    }
+<b class="fc"><i class="no-highlight">56</i>&nbsp;    if (Strings.isBlank(password)) {</b>
+<b class="fc"><i class="no-highlight">57</i>&nbsp;      throw new UsernameNotFoundException(&quot;Invalid password.&quot;);</b>
+<i class="no-highlight">58</i>&nbsp;    }
+<b class="fc"><i class="no-highlight">59</i>&nbsp;    final String uname = username.trim();</b>
+<b class="fc"><i class="no-highlight">60</i>&nbsp;    Optional&lt;UserEntity&gt; oUserEntity = findUserByUserName(uname);</b>
+<b class="fc"><i class="no-highlight">61</i>&nbsp;    UserEntity userEntity = oUserEntity.orElseThrow(</b>
+<b class="fc"><i class="no-highlight">62</i>&nbsp;        () -&gt; new InsufficientAuthenticationException(&quot;Unauthorized.&quot;));</b>
+<i class="no-highlight">63</i>&nbsp;
+<b class="fc"><i class="no-highlight">64</i>&nbsp;    if (!bCryptPasswordEncoder.matches(password, userEntity.getPassword())) {</b>
+<b class="fc"><i class="no-highlight">65</i>&nbsp;      throw new InsufficientAuthenticationException(&quot;Unauthorized.&quot;);</b>
+<i class="no-highlight">66</i>&nbsp;    }
+<b class="fc"><i class="no-highlight">67</i>&nbsp;    return getSignedInUser(userEntity);</b>
+<i class="no-highlight">68</i>&nbsp;  }
+<i class="no-highlight">69</i>&nbsp;
+<i class="no-highlight">70</i>&nbsp;  @Override
+<i class="no-highlight">71</i>&nbsp;  public void removeRefreshToken(RefreshToken refreshToken) {
+<b class="fc"><i class="no-highlight">72</i>&nbsp;    userTokenRepository.findByRefreshToken(refreshToken.getRefreshToken())</b>
+<b class="fc"><i class="no-highlight">73</i>&nbsp;        .ifPresentOrElse(userTokenRepository::delete, () -&gt; {</b>
+<b class="fc"><i class="no-highlight">74</i>&nbsp;          throw new InvalidRefreshTokenException(&quot;Invalid token.&quot;);</b>
+<i class="no-highlight">75</i>&nbsp;        });
+<i class="no-highlight">76</i>&nbsp;  }
+<i class="no-highlight">77</i>&nbsp;
+<i class="no-highlight">78</i>&nbsp;  @Override
+<i class="no-highlight">79</i>&nbsp;  public Optional&lt;SignedInUser&gt; getAccessToken(RefreshToken refreshToken) {
+<i class="no-highlight">80</i>&nbsp;    // You may add an additional validation for time that would remove/invalidate the refresh token
+<b class="fc"><i class="no-highlight">81</i>&nbsp;    return userTokenRepository.findByRefreshToken(refreshToken.getRefreshToken())</b>
+<b class="fc"><i class="no-highlight">82</i>&nbsp;        .map(ut -&gt; {</b>
+<b class="fc"><i class="no-highlight">83</i>&nbsp;          SignedInUser signedInUser = createSignedInUser(ut.getUser());</b>
+<b class="fc"><i class="no-highlight">84</i>&nbsp;          signedInUser.setRefreshToken(refreshToken.getRefreshToken());</b>
+<b class="fc"><i class="no-highlight">85</i>&nbsp;          return Optional.of(signedInUser);</b>
+<i class="no-highlight">86</i>&nbsp;        })
+<b class="fc"><i class="no-highlight">87</i>&nbsp;        .orElseThrow(() -&gt; new InvalidRefreshTokenException(&quot;Invalid token.&quot;));</b>
+<i class="no-highlight">88</i>&nbsp;  }
+<i class="no-highlight">89</i>&nbsp;
+<i class="no-highlight">90</i>&nbsp;  @Override
+<i class="no-highlight">91</i>&nbsp;  public Optional&lt;UserEntity&gt; findUserByUserName(String username) {
+<b class="fc"><i class="no-highlight">92</i>&nbsp;    return userRepository.findByUsername(username);</b>
+<i class="no-highlight">93</i>&nbsp;  }
+<i class="no-highlight">94</i>&nbsp;
+<i class="no-highlight">95</i>&nbsp;  @Transactional
+<i class="no-highlight">96</i>&nbsp;  public SignedInUser getSignedInUser(UserEntity userEntity) {
+<b class="fc"><i class="no-highlight">97</i>&nbsp;    userTokenRepository.deleteByUserId(userEntity.getId());</b>
+<b class="fc"><i class="no-highlight">98</i>&nbsp;    return createSignedUserWithRefreshToken(userEntity);</b>
+<i class="no-highlight">99</i>&nbsp;  }
+<i class="no-highlight">100</i>&nbsp;
+<i class="no-highlight">101</i>&nbsp;  @Transactional
+<i class="no-highlight">102</i>&nbsp;  protected UserEntity createUser(User user) {
+<b class="fc"><i class="no-highlight">103</i>&nbsp;    Integer count = userRepository.findByUsernameOrEmail(user.getUsername(), user.getEmail());</b>
+<b class="fc"><i class="no-highlight">104</i>&nbsp;    if (count &gt; 0) {</b>
+<b class="fc"><i class="no-highlight">105</i>&nbsp;      throw new GenericAlreadyExistsException(&quot;Use different username and email.&quot;);</b>
+<i class="no-highlight">106</i>&nbsp;    }
+<b class="fc"><i class="no-highlight">107</i>&nbsp;    if (user.getRole() == null) {</b>
+<b class="fc"><i class="no-highlight">108</i>&nbsp;      user.setRole(RoleEnum.USER);</b>
+<i class="no-highlight">109</i>&nbsp;    }
+<b class="fc"><i class="no-highlight">110</i>&nbsp;    UserEntity userEntity = UserEntity.toEntity(user);</b>
+<b class="fc"><i class="no-highlight">111</i>&nbsp;    userEntity.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));</b>
+<b class="fc"><i class="no-highlight">112</i>&nbsp;    userRepository.save(userEntity);</b>
+<b class="fc"><i class="no-highlight">113</i>&nbsp;    return userEntity;</b>
+<i class="no-highlight">114</i>&nbsp;  }
+<i class="no-highlight">115</i>&nbsp;
+<i class="no-highlight">116</i>&nbsp;  private SignedInUser createSignedUserWithRefreshToken(UserEntity userEntity) {
+<b class="fc"><i class="no-highlight">117</i>&nbsp;    SignedInUser signedInUser = createSignedInUser(userEntity);</b>
+<b class="fc"><i class="no-highlight">118</i>&nbsp;    signedInUser.setRefreshToken(createRefreshToken(userEntity));</b>
+<b class="fc"><i class="no-highlight">119</i>&nbsp;    return signedInUser;</b>
+<i class="no-highlight">120</i>&nbsp;  }
+<i class="no-highlight">121</i>&nbsp;
+<i class="no-highlight">122</i>&nbsp;  private SignedInUser createSignedInUser(UserEntity userEntity) {
+<b class="fc"><i class="no-highlight">123</i>&nbsp;    String token = tokenManager.create(org.springframework.security.core.userdetails.User.builder()</b>
+<b class="fc"><i class="no-highlight">124</i>&nbsp;        .username(userEntity.getUsername())</b>
+<b class="fc"><i class="no-highlight">125</i>&nbsp;        .password(userEntity.getPassword())</b>
+<b class="fc"><i class="no-highlight">126</i>&nbsp;        .authorities(Objects.nonNull(userEntity.getRole()) ? userEntity.getRole().name() : &quot;&quot;)</b>
+<b class="fc"><i class="no-highlight">127</i>&nbsp;        .build());</b>
+<i class="no-highlight">128</i>&nbsp;
+<b class="fc"><i class="no-highlight">129</i>&nbsp;    SignedInUser signedInUser = new SignedInUser();</b>
+<b class="fc"><i class="no-highlight">130</i>&nbsp;    signedInUser.setUserId(userEntity.getId());</b>
+<b class="fc"><i class="no-highlight">131</i>&nbsp;    signedInUser.setUsername(userEntity.getUsername());</b>
+<b class="fc"><i class="no-highlight">132</i>&nbsp;    signedInUser.setAccessToken(token);</b>
+<i class="no-highlight">133</i>&nbsp;
+<b class="fc"><i class="no-highlight">134</i>&nbsp;    return signedInUser;</b>
+<i class="no-highlight">135</i>&nbsp;  }
+<i class="no-highlight">136</i>&nbsp;
+<i class="no-highlight">137</i>&nbsp;  private String createRefreshToken(UserEntity user) {
+<b class="fc"><i class="no-highlight">138</i>&nbsp;    String token = RandomHolder.randomKey(128);</b>
+<b class="fc"><i class="no-highlight">139</i>&nbsp;    UserTokenEntity userTokenEntity = new UserTokenEntity();</b>
+<b class="fc"><i class="no-highlight">140</i>&nbsp;    userTokenEntity.setRefreshToken(token);</b>
+<b class="fc"><i class="no-highlight">141</i>&nbsp;    userTokenEntity.setUser(user);</b>
+<b class="fc"><i class="no-highlight">142</i>&nbsp;    userTokenRepository.save(userTokenEntity);</b>
+<b class="fc"><i class="no-highlight">143</i>&nbsp;    return token;</b>
+<i class="no-highlight">144</i>&nbsp;  }
+<i class="no-highlight">145</i>&nbsp;
+<i class="no-highlight">146</i>&nbsp;  /**
+<i class="no-highlight">147</i>&nbsp;   * Generate secure randoms Strings
+<i class="no-highlight">148</i>&nbsp;   */
+<i class="no-highlight">149</i>&nbsp;  private static class RandomHolder {
+<i class="no-highlight">150</i>&nbsp;
+<b class="fc"><i class="no-highlight">151</i>&nbsp;    static final Random random = new SecureRandom();</b>
+<i class="no-highlight">152</i>&nbsp;
+<i class="no-highlight">153</i>&nbsp;    public static String randomKey(int length) {
+<b class="fc"><i class="no-highlight">154</i>&nbsp;      return String.format(&quot;%&quot; + length + &quot;s&quot;, new BigInteger(length * 5/*base 32,2^5*/, random)</b>
+<b class="fc"><i class="no-highlight">155</i>&nbsp;          .toString(32)).replace(&#39;\u0020&#39;, &#39;0&#39;);</b>
+<i class="no-highlight">156</i>&nbsp;    }
+<i class="no-highlight">157</i>&nbsp;  }
+<i class="no-highlight">158</i>&nbsp;}
+</div>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+        var codeBlock = document.getElementById('sourceCode');
+
+        if (codeBlock) {
+            hljs.highlightBlock(codeBlock);
+        }
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-01-05 23:36</div>
+</div>
+</body>
+</html>

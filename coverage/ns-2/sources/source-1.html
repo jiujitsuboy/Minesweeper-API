@@ -1,0 +1,162 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > AppConfig</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/highlight-idea.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.pack.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.deviget.minesweeper.configuration</a>
+</div>
+
+<h1>Coverage Summary for Class: AppConfig (com.deviget.minesweeper.configuration)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">AppConfig</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (4/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (8/8)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">AppConfig$$EnhancerBySpringCGLIB$$1199f084</td>
+  </tr>
+  <tr>
+    <td class="name">AppConfig$$EnhancerBySpringCGLIB$$1199f084$$FastClassBySpringCGLIB$$58bbf815</td>
+  </tr>
+  <tr>
+    <td class="name">AppConfig$$FastClassBySpringCGLIB$$c86b3aa</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (4/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (8/8)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<div class="sourceCode" id="sourceCode"><i class="no-highlight">1</i>&nbsp;package com.deviget.minesweeper.configuration;
+<i class="no-highlight">2</i>&nbsp;
+<i class="no-highlight">3</i>&nbsp;import static com.deviget.minesweeper.Constants.ENCODER_ID;
+<i class="no-highlight">4</i>&nbsp;
+<i class="no-highlight">5</i>&nbsp;import com.fasterxml.jackson.databind.ObjectMapper;
+<i class="no-highlight">6</i>&nbsp;import com.fasterxml.jackson.databind.SerializationFeature;
+<i class="no-highlight">7</i>&nbsp;import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+<i class="no-highlight">8</i>&nbsp;import java.util.Map;
+<i class="no-highlight">9</i>&nbsp;import org.springframework.context.annotation.Bean;
+<i class="no-highlight">10</i>&nbsp;import org.springframework.context.annotation.Configuration;
+<i class="no-highlight">11</i>&nbsp;import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+<i class="no-highlight">12</i>&nbsp;import org.springframework.security.crypto.password.DelegatingPasswordEncoder;
+<i class="no-highlight">13</i>&nbsp;import org.springframework.security.crypto.password.PasswordEncoder;
+<i class="no-highlight">14</i>&nbsp;import org.springframework.security.crypto.password.Pbkdf2PasswordEncoder;
+<i class="no-highlight">15</i>&nbsp;import org.springframework.security.crypto.scrypt.SCryptPasswordEncoder;
+<i class="no-highlight">16</i>&nbsp;import org.springframework.web.filter.ShallowEtagHeaderFilter;
+<i class="no-highlight">17</i>&nbsp;
+<i class="no-highlight">18</i>&nbsp;@Configuration
+<b class="fc"><i class="no-highlight">19</i>&nbsp;public class AppConfig {</b>
+<i class="no-highlight">20</i>&nbsp;  @Bean
+<i class="no-highlight">21</i>&nbsp;  public ShallowEtagHeaderFilter shallowEtagHeaderFilter() {
+<b class="fc"><i class="no-highlight">22</i>&nbsp;    return new ShallowEtagHeaderFilter();</b>
+<i class="no-highlight">23</i>&nbsp;  }
+<i class="no-highlight">24</i>&nbsp;
+<i class="no-highlight">25</i>&nbsp;  @Bean
+<i class="no-highlight">26</i>&nbsp;  public PasswordEncoder passwordEncoder() {
+<i class="no-highlight">27</i>&nbsp;    // Supports other password encoding, a must for existing applications.
+<i class="no-highlight">28</i>&nbsp;    // However, uses BCrypt for new passwords. This will allow to use new or future encoders
+<b class="fc"><i class="no-highlight">29</i>&nbsp;    Map&lt;String, PasswordEncoder&gt; encoders = Map.of(ENCODER_ID, new BCryptPasswordEncoder(),</b>
+<i class="no-highlight">30</i>&nbsp;        &quot;pbkdf2&quot;, new Pbkdf2PasswordEncoder(), &quot;scrypt&quot;, new SCryptPasswordEncoder());
+<b class="fc"><i class="no-highlight">31</i>&nbsp;    return new DelegatingPasswordEncoder(ENCODER_ID, encoders);</b>
+<i class="no-highlight">32</i>&nbsp;  }
+<i class="no-highlight">33</i>&nbsp;
+<i class="no-highlight">34</i>&nbsp;  @Bean
+<i class="no-highlight">35</i>&nbsp;  public ObjectMapper objectMapper() {
+<b class="fc"><i class="no-highlight">36</i>&nbsp;    ObjectMapper mapper = new ObjectMapper();</b>
+<b class="fc"><i class="no-highlight">37</i>&nbsp;    mapper.registerModule(new JavaTimeModule());</b>
+<b class="fc"><i class="no-highlight">38</i>&nbsp;    mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);</b>
+<b class="fc"><i class="no-highlight">39</i>&nbsp;    return mapper;</b>
+<i class="no-highlight">40</i>&nbsp;  }
+<i class="no-highlight">41</i>&nbsp;}
+</div>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+        var codeBlock = document.getElementById('sourceCode');
+
+        if (codeBlock) {
+            hljs.highlightBlock(codeBlock);
+        }
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-01-05 23:36</div>
+</div>
+</body>
+</html>

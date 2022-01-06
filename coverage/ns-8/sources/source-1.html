@@ -1,0 +1,164 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > JwtManager</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/highlight-idea.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.pack.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.deviget.minesweeper.security</a>
+</div>
+
+<h1>Coverage Summary for Class: JwtManager (com.deviget.minesweeper.security)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">JwtManager</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (2/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (13/13)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">JwtManager$MockitoMock$1573415197</td>
+  </tr>
+  <tr>
+    <td class="name">JwtManager$MockitoMock$1573415197$auxiliary$H3pNOEWH</td>
+  </tr>
+  <tr>
+    <td class="name">JwtManager$MockitoMock$1573415197$auxiliary$jcaCxvbn</td>
+  </tr>
+  <tr>
+    <td class="name">JwtManager$MockitoMock$1573415197$auxiliary$WG09Dsh3</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (2/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (13/13)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<div class="sourceCode" id="sourceCode"><i class="no-highlight">1</i>&nbsp;package com.deviget.minesweeper.security;
+<i class="no-highlight">2</i>&nbsp;
+<i class="no-highlight">3</i>&nbsp;import static com.deviget.minesweeper.Constants.EXPIRATION_TIME;
+<i class="no-highlight">4</i>&nbsp;import static com.deviget.minesweeper.Constants.ROLE_CLAIM;
+<i class="no-highlight">5</i>&nbsp;import static java.util.stream.Collectors.toList;
+<i class="no-highlight">6</i>&nbsp;
+<i class="no-highlight">7</i>&nbsp;import com.auth0.jwt.JWT;
+<i class="no-highlight">8</i>&nbsp;import com.auth0.jwt.algorithms.Algorithm;
+<i class="no-highlight">9</i>&nbsp;import java.security.interfaces.RSAPrivateKey;
+<i class="no-highlight">10</i>&nbsp;import java.security.interfaces.RSAPublicKey;
+<i class="no-highlight">11</i>&nbsp;import java.util.Date;
+<i class="no-highlight">12</i>&nbsp;import org.springframework.security.core.GrantedAuthority;
+<i class="no-highlight">13</i>&nbsp;import org.springframework.security.core.userdetails.UserDetails;
+<i class="no-highlight">14</i>&nbsp;import org.springframework.stereotype.Component;
+<i class="no-highlight">15</i>&nbsp;
+<i class="no-highlight">16</i>&nbsp;@Component
+<i class="no-highlight">17</i>&nbsp;public class JwtManager {
+<i class="no-highlight">18</i>&nbsp;
+<i class="no-highlight">19</i>&nbsp;  private final RSAPrivateKey privateKey;
+<i class="no-highlight">20</i>&nbsp;  private final RSAPublicKey publicKey;
+<i class="no-highlight">21</i>&nbsp;
+<b class="fc"><i class="no-highlight">22</i>&nbsp;  public JwtManager(RSAPrivateKey privateKey, RSAPublicKey publicKey) {</b>
+<b class="fc"><i class="no-highlight">23</i>&nbsp;    this.privateKey = privateKey;</b>
+<b class="fc"><i class="no-highlight">24</i>&nbsp;    this.publicKey = publicKey;</b>
+<i class="no-highlight">25</i>&nbsp;  }
+<i class="no-highlight">26</i>&nbsp;
+<i class="no-highlight">27</i>&nbsp;  public String create(UserDetails principal) {
+<b class="fc"><i class="no-highlight">28</i>&nbsp;    final long now = System.currentTimeMillis();</b>
+<b class="fc"><i class="no-highlight">29</i>&nbsp;    return JWT.create()</b>
+<b class="fc"><i class="no-highlight">30</i>&nbsp;        .withIssuer(&quot;MineSweeper API&quot;)</b>
+<b class="fc"><i class="no-highlight">31</i>&nbsp;        .withSubject(principal.getUsername())</b>
+<b class="fc"><i class="no-highlight">32</i>&nbsp;        .withClaim(ROLE_CLAIM,</b>
+<b class="fc"><i class="no-highlight">33</i>&nbsp;            principal.getAuthorities().stream().map(GrantedAuthority::getAuthority)</b>
+<b class="fc"><i class="no-highlight">34</i>&nbsp;                .collect(toList()))</b>
+<b class="fc"><i class="no-highlight">35</i>&nbsp;        .withIssuedAt(new Date(now))</b>
+<b class="fc"><i class="no-highlight">36</i>&nbsp;        .withExpiresAt(new Date(now + EXPIRATION_TIME))</b>
+<i class="no-highlight">37</i>&nbsp;        //.sign(Algorithm.HMAC512(SECRET_KEY.getBytes(StandardCharsets.UTF_8)));
+<b class="fc"><i class="no-highlight">38</i>&nbsp;        .sign(Algorithm.RSA256(publicKey, privateKey));</b>
+<i class="no-highlight">39</i>&nbsp;  }
+<i class="no-highlight">40</i>&nbsp;}
+</div>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+        var codeBlock = document.getElementById('sourceCode');
+
+        if (codeBlock) {
+            hljs.highlightBlock(codeBlock);
+        }
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-01-05 23:36</div>
+</div>
+</body>
+</html>

@@ -17,6 +17,7 @@ import com.deviget.minesweeper.entity.MinesweeperBoardCellEntity;
 import com.deviget.minesweeper.entity.MinesweeperGameEntity;
 import com.deviget.minesweeper.entity.RoleEnum;
 import com.deviget.minesweeper.entity.UserEntity;
+import com.deviget.minesweeper.exception.CellNotFoundException;
 import com.deviget.minesweeper.exception.GameIsOverException;
 import com.deviget.minesweeper.exception.GameNotFoundException;
 import com.deviget.minesweeper.exception.InvalidGameParameter;
@@ -236,7 +237,7 @@ class MinesweeperControllerTest {
     UUID userId = UUID.randomUUID();
     UUID gameId = UUID.randomUUID();
 
-    when(minesweeperService.getGameForUser(any(UUID.class), any(UUID.class))).thenThrow(GameNotFoundException.class);
+    when(minesweeperService.getGameForUser(any(UUID.class), any(UUID.class))).thenThrow(new GameNotFoundException("Game not found"));
 
     mvc.perform(get("/api/v1/game/{userId}/{gameId}", userId, gameId)
             .contentType(MediaType.APPLICATION_JSON)
@@ -293,11 +294,11 @@ class MinesweeperControllerTest {
             .contentType(MediaType.APPLICATION_JSON)
             .header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$._embedded.minesweeperGameList[0].details.user.id", is(userId.toString())))
-        .andExpect(jsonPath("$._embedded.minesweeperGameList[0].details.rows", is(numRows)))
-        .andExpect(jsonPath("$._embedded.minesweeperGameList[0].details.columns", is(numColumns)))
-        .andExpect(jsonPath("$._embedded.minesweeperGameList[0].details.numBombs", is(numBombs)))
-        .andExpect(jsonPath("$._embedded.minesweeperGameList[0].details.numCellsOpened", is(0)))
+        .andExpect(jsonPath("$._embedded.minesweeperGameDetailsList[0].user.id", is(userId.toString())))
+        .andExpect(jsonPath("$._embedded.minesweeperGameDetailsList[0].rows", is(numRows)))
+        .andExpect(jsonPath("$._embedded.minesweeperGameDetailsList[0].columns", is(numColumns)))
+        .andExpect(jsonPath("$._embedded.minesweeperGameDetailsList[0].numBombs", is(numBombs)))
+        .andExpect(jsonPath("$._embedded.minesweeperGameDetailsList[0].numCellsOpened", is(0)))
         .andExpect(jsonPath("$.page.size", is(1)))
         .andExpect(jsonPath("$.page.totalElements", is(1)))
         .andExpect(jsonPath("$.page.totalPages", is(1)))
@@ -350,21 +351,9 @@ class MinesweeperControllerTest {
   public void openCellGameIsOverException() throws Exception {
     UUID gameId = UUID.randomUUID();
     UUID userId = UUID.randomUUID();
-    int value = 5;
     int row = 0;
     int column = 0;
     boolean isCellFlagged = false;
-    boolean isGameOver = false;
-    boolean isWon = false;
-
-    GameStatus gameStatus = GameStatus.builder()
-        .gameId(gameId)
-        .userId(userId)
-        .cellValue(value)
-        .cellsOpened(new ArrayList<>())
-        .isGameOver(isGameOver)
-        .isWon(isWon)
-        .build();
 
     MinesweeperCellReq minesweeperCellReq = MinesweeperCellReq.builder()
         .userId(userId)
@@ -375,6 +364,31 @@ class MinesweeperControllerTest {
         .build();
 
     when(minesweeperService.openCell(any(UUID.class), any(UUID.class), anyInt(), anyInt())).thenThrow(GameIsOverException.class);
+
+    mvc.perform(patch("/api/v1/game/cell")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(json.writeValueAsString(minesweeperCellReq))
+            .header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
+        .andExpect(status().isBadRequest());
+  }
+
+  @Test
+  public void openCellCellNotFoundException() throws Exception {
+    UUID gameId = UUID.randomUUID();
+    UUID userId = UUID.randomUUID();
+    int row = 0;
+    int column = 0;
+    boolean isCellFlagged = false;
+
+    MinesweeperCellReq minesweeperCellReq = MinesweeperCellReq.builder()
+        .userId(userId)
+        .gameId(gameId)
+        .row(row)
+        .column(column)
+        .flaggedCell(isCellFlagged)
+        .build();
+
+    when(minesweeperService.openCell(any(UUID.class), any(UUID.class), anyInt(), anyInt())).thenThrow(CellNotFoundException.class);
 
     mvc.perform(patch("/api/v1/game/cell")
             .contentType(MediaType.APPLICATION_JSON)
@@ -407,6 +421,31 @@ class MinesweeperControllerTest {
             .header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
         .andExpect(status().isAccepted())
         .andExpect(jsonPath("$", is(isCellFlagged)));
+  }
+
+  @Test
+  public void markCellCellNotFoundException() throws Exception {
+    UUID gameId = UUID.randomUUID();
+    UUID userId = UUID.randomUUID();
+    int row = 0;
+    int column = 0;
+    boolean isCellFlagged = false;
+
+    MinesweeperCellReq minesweeperCellReq = MinesweeperCellReq.builder()
+        .userId(userId)
+        .gameId(gameId)
+        .row(row)
+        .column(column)
+        .flaggedCell(isCellFlagged)
+        .build();
+
+    when(minesweeperService.markCell(any(UUID.class), any(UUID.class), anyInt(), anyInt(), anyBoolean())).thenThrow(new CellNotFoundException("Cell not found"));
+
+    mvc.perform(patch("/api/v1/game/cell/flagged")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(json.writeValueAsString(minesweeperCellReq))
+            .header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
+        .andExpect(status().isBadRequest());
   }
 
   @Test

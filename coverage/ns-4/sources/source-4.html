@@ -1,0 +1,212 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > UserEntity</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/highlight-idea.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.pack.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.deviget.minesweeper.entity</a>
+</div>
+
+<h1>Coverage Summary for Class: UserEntity (com.deviget.minesweeper.entity)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">UserEntity</td>
+<td class="coverageStat">
+  <span class="percent">
+    78,6%
+  </span>
+  <span class="absValue">
+    (11/14)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    84,2%
+  </span>
+  <span class="absValue">
+    (16/19)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">UserEntity$HibernateProxy$DUWlW2JP</td>
+  </tr>
+  <tr>
+    <td class="name">UserEntity$HibernateProxy$G7zhSqpy</td>
+  </tr>
+  <tr>
+    <td class="name">UserEntity$UserEntityBuilder</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    73,3%
+  </span>
+  <span class="absValue">
+    (11/15)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    80%
+  </span>
+  <span class="absValue">
+    (16/20)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<div class="sourceCode" id="sourceCode"><i class="no-highlight">1</i>&nbsp;package com.deviget.minesweeper.entity;
+<i class="no-highlight">2</i>&nbsp;
+<i class="no-highlight">3</i>&nbsp;
+<i class="no-highlight">4</i>&nbsp;import com.deviget.minesweeper.model.User;
+<i class="no-highlight">5</i>&nbsp;import java.util.List;
+<i class="no-highlight">6</i>&nbsp;import java.util.UUID;
+<i class="no-highlight">7</i>&nbsp;import javax.persistence.Basic;
+<i class="no-highlight">8</i>&nbsp;import javax.persistence.Column;
+<i class="no-highlight">9</i>&nbsp;import javax.persistence.Entity;
+<i class="no-highlight">10</i>&nbsp;import javax.persistence.EnumType;
+<i class="no-highlight">11</i>&nbsp;import javax.persistence.Enumerated;
+<i class="no-highlight">12</i>&nbsp;import javax.persistence.FetchType;
+<i class="no-highlight">13</i>&nbsp;import javax.persistence.GeneratedValue;
+<i class="no-highlight">14</i>&nbsp;import javax.persistence.Id;
+<i class="no-highlight">15</i>&nbsp;import javax.persistence.OneToMany;
+<i class="no-highlight">16</i>&nbsp;import javax.persistence.Table;
+<i class="no-highlight">17</i>&nbsp;import javax.validation.constraints.NotNull;
+<i class="no-highlight">18</i>&nbsp;import lombok.AllArgsConstructor;
+<i class="no-highlight">19</i>&nbsp;import lombok.Builder;
+<i class="no-highlight">20</i>&nbsp;import lombok.Data;
+<i class="no-highlight">21</i>&nbsp;import lombok.NoArgsConstructor;
+<i class="no-highlight">22</i>&nbsp;import org.springframework.beans.BeanUtils;
+<i class="no-highlight">23</i>&nbsp;
+<i class="no-highlight">24</i>&nbsp;@Entity
+<i class="no-highlight">25</i>&nbsp;@Table(name = &quot;user&quot;)
+<b class="fc"><i class="no-highlight">26</i>&nbsp;@NoArgsConstructor</b>
+<b class="nc"><i class="no-highlight">27</i>&nbsp;@AllArgsConstructor</b>
+<b class="nc"><i class="no-highlight">28</i>&nbsp;@Builder</b>
+<b class="fc"><i class="no-highlight">29</i>&nbsp;@Data</b>
+<i class="no-highlight">30</i>&nbsp;public class UserEntity {
+<i class="no-highlight">31</i>&nbsp;
+<i class="no-highlight">32</i>&nbsp;  @Id
+<i class="no-highlight">33</i>&nbsp;  @GeneratedValue
+<i class="no-highlight">34</i>&nbsp;  @Column(name=&quot;ID&quot;, updatable = false, nullable = false)
+<b class="fc"><i class="no-highlight">35</i>&nbsp;  private UUID id;</b>
+<i class="no-highlight">36</i>&nbsp;
+<i class="no-highlight">37</i>&nbsp;  @NotNull(message = &quot;User name is required.&quot;)
+<i class="no-highlight">38</i>&nbsp;  @Basic(optional = false)
+<i class="no-highlight">39</i>&nbsp;  @Column(name = &quot;USERNAME&quot;)
+<b class="fc"><i class="no-highlight">40</i>&nbsp;  private String username;</b>
+<i class="no-highlight">41</i>&nbsp;
+<i class="no-highlight">42</i>&nbsp;  @Column(name = &quot;PASSWORD&quot;)
+<b class="fc"><i class="no-highlight">43</i>&nbsp;  private String password;</b>
+<i class="no-highlight">44</i>&nbsp;
+<i class="no-highlight">45</i>&nbsp;  @Column(name = &quot;FIRST_NAME&quot;)
+<b class="fc"><i class="no-highlight">46</i>&nbsp;  private String firstName;</b>
+<i class="no-highlight">47</i>&nbsp;
+<i class="no-highlight">48</i>&nbsp;  @Column(name = &quot;LAST_NAME&quot;)
+<b class="fc"><i class="no-highlight">49</i>&nbsp;  private String lastName;</b>
+<i class="no-highlight">50</i>&nbsp;
+<i class="no-highlight">51</i>&nbsp;  @Column(name = &quot;EMAIL&quot;)
+<b class="fc"><i class="no-highlight">52</i>&nbsp;  private String email;</b>
+<i class="no-highlight">53</i>&nbsp;
+<b class="fc"><i class="no-highlight">54</i>&nbsp;  @Column(name = &quot;ROLE&quot;)</b>
+<i class="no-highlight">55</i>&nbsp;  @Basic(optional = false)
+<i class="no-highlight">56</i>&nbsp;  @Enumerated(EnumType.STRING)
+<b class="fc"><i class="no-highlight">57</i>&nbsp;  private RoleEnum role = RoleEnum.USER;</b>
+<i class="no-highlight">58</i>&nbsp;
+<i class="no-highlight">59</i>&nbsp;  @OneToMany(mappedBy = &quot;user&quot;, fetch = FetchType.LAZY)
+<b class="nc"><i class="no-highlight">60</i>&nbsp;  List&lt;MinesweeperGameEntity&gt; games;</b>
+<i class="no-highlight">61</i>&nbsp;
+<i class="no-highlight">62</i>&nbsp;  public static UserEntity toEntity(User user){
+<b class="fc"><i class="no-highlight">63</i>&nbsp;    UserEntity userEntity = new UserEntity();</b>
+<b class="fc"><i class="no-highlight">64</i>&nbsp;    BeanUtils.copyProperties(user, userEntity);</b>
+<i class="no-highlight">65</i>&nbsp;
+<b class="fc"><i class="no-highlight">66</i>&nbsp;    return userEntity;</b>
+<i class="no-highlight">67</i>&nbsp;  }
+<i class="no-highlight">68</i>&nbsp;
+<i class="no-highlight">69</i>&nbsp;  public static User toModel(UserEntity userEntity){
+<b class="fc"><i class="no-highlight">70</i>&nbsp;    User user = new User();</b>
+<b class="fc"><i class="no-highlight">71</i>&nbsp;    BeanUtils.copyProperties(userEntity,user);</b>
+<i class="no-highlight">72</i>&nbsp;
+<b class="fc"><i class="no-highlight">73</i>&nbsp;    return user;</b>
+<i class="no-highlight">74</i>&nbsp;  }
+<i class="no-highlight">75</i>&nbsp;}
+</div>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+        var codeBlock = document.getElementById('sourceCode');
+
+        if (codeBlock) {
+            hljs.highlightBlock(codeBlock);
+        }
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-01-05 23:36</div>
+</div>
+</body>
+</html>

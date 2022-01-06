@@ -1,5 +1,6 @@
 package com.deviget.minesweeper.controller;
 
+import com.deviget.minesweeper.exception.CellNotFoundException;
 import com.deviget.minesweeper.exception.GameIsOverException;
 import com.deviget.minesweeper.exception.GameNotFoundException;
 import com.deviget.minesweeper.exception.GenericAlreadyExistsException;
@@ -88,6 +89,17 @@ public class RestResponseEntityExceptionHandler {
   @ExceptionHandler(InvalidGameParameter.class)
   protected ResponseEntity<Object> invalidGameParameter(
       InvalidGameParameter ex, WebRequest request) {
+
+    Map<String, Object> body = new LinkedHashMap<>();
+    body.put("timestamp", LocalDateTime.now());
+    body.put("message", ex.getMessage());
+
+    return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+  }
+
+  @ExceptionHandler(CellNotFoundException.class)
+  protected ResponseEntity<Object> cellNotFoundException(
+      CellNotFoundException ex, WebRequest request) {
 
     Map<String, Object> body = new LinkedHashMap<>();
     body.put("timestamp", LocalDateTime.now());

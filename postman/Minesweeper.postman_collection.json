@@ -297,7 +297,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"userId\": \"{{userId}}\",\r\n    \"numRows\": 2,\r\n    \"numColumns\": 2,\r\n    \"numBombs\": 1\r\n}"
+							"raw": "{\r\n    \"userId\": \"{{userId}}\",\r\n    \"numRows\": 2,\r\n    \"numColumns\": 4,\r\n    \"numBombs\": 1\r\n}"
 						},
 						"url": {
 							"raw": "http://localhost:8082/api/v1/game/",
@@ -367,7 +367,7 @@
 							}
 						],
 						"url": {
-							"raw": "http://localhost:8082/api/v1/game/{{userId}}",
+							"raw": "http://localhost:8082/api/v1/game/{{userId}}?page=0&size=1",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -378,6 +378,16 @@
 								"v1",
 								"game",
 								"{{userId}}"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "1"
+								}
 							]
 						}
 					},
@@ -401,7 +411,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"gameId\": \"{{gameId}}\",\r\n    \"userId\": \"{{userId}}\",\r\n    \"row\": 1,\r\n    \"column\": 1\r\n}"
+							"raw": "{\r\n    \"gameId\": \"{{gameId}}\",\r\n    \"userId\": \"{{userId}}\",\r\n    \"row\": 0,\r\n    \"column\": 1\r\n}"
 						},
 						"url": {
 							"raw": "http://localhost:8082/api/v1/game/cell",
@@ -438,7 +448,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"gameId\": \"{{gameId}}\",\r\n    \"userId\": \"{{userId}}\",\r\n    \"row\": 0,\r\n    \"column\": 0,\r\n    \"flaggedCell\": true\r\n}"
+							"raw": "{\r\n    \"gameId\": \"{{gameId}}\",\r\n    \"userId\": \"{{userId}}\",\r\n    \"row\": 0,\r\n    \"column\": 0,\r\n    \"flaggedCell\": false\r\n}"
 						},
 						"url": {
 							"raw": "http://localhost:8082/api/v1/game/cell/flagged",

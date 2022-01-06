@@ -54,9 +54,9 @@ class AuthControllerTest {
 
   @Test
   public void getAccessToken() throws Exception {
-    String userName = "scott1";
-    final String accessToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJzY290dDEiLCJyb2xlcyI6WyJVU0VSIl0sImlzcyI6IkRyZWFtIFRlYW0gQVBJIiwiZXhwIjoxNjM5NDQ1NjA1LCJpYXQiOjE2Mzk0NDQ3MDV9.jFJV4vhRMllJf1SaR5An9GrSB10fX66GCYOJYbj0t3JDwSmN_b1DYrkseCJQgDbWj6pFF8gGV0gb19N99dAga-x6w3rK7bjL0zO7y03bhXYEWSOqCzSlw8FqiFGSTpcNqykU6hLFn8AuiAIGjT1Y9jyhPhbKlb7Lq7IhUcmJrMJsHkXXBlk5237NTtp_LZjK0Kl3gZm7vmkdYInliWbVsNr4ehc24vcfykMPMHgZugpSYyN62b4O58HWYHnBwuxYYWtkyRFyCl_z75K8GsOyuOZ80HqsjDHXMuK1v7LVlOgy5tJsnDypqJIBe1-hj-KWyvSyZnXpUQqTTGby2cRKcBGH0QYSWiy1pASGNjYPcqAHa2j4UFQwQFKSO6XNO6BKtQ0i6xiTgnF0tOKRK1Y4Orjegr6KmQvYom5ZX6rcTZniH86VSiQVTq4cAzKTzTsfguv_GGzwqfv3gDkwjhH1Vs1CDDXLLb5OXudnpu62o4PBPlUUKbSwE9ntj1aDWDdTsxl86Jsx3fMMOvkYHY9Bba8T82JNIlmFNQXF9sscBdUNyQx55UMLbEz7N72KI1DWgU2UU5Qh2KIhdkD7yL3CDL5-B7y7vBe3Etb1Sc4HZfAHNFjcFXK1elaIzZUFGaqswLswy8wRbYyU7Qa29pesGsKwmXNej8h6fpzoQZKy6hg";
-    final String refreshToken = "26rvap1cr3maf85akd9jb27c7dlrlkfn82hn3rahrb9qhr0rcmtl82jjt75tapoqtqktkh6rgdicb7mm1i38qqhdpgb7v8q3omoffu7dj1o8is3h763o54l978tfp95v";
+    String userName = TestConstants.USER_NAME_A;
+    final String accessToken = TestConstants.ACCESS_TOKEN;
+    final String refreshToken = TestConstants.REFRESH_TOKEN;
 
     RefreshToken refreshTokenModel = new RefreshToken(refreshToken);
     SignedInUser signedInUser = new SignedInUser();
@@ -104,8 +104,8 @@ class AuthControllerTest {
 
   @Test
   public void signInUsernameNotFoundException() throws Exception {
-    String userName = "scott1";
-    String password = "tiger";
+    String userName = TestConstants.USER_NAME_A;
+    String password = TestConstants.USER_PASSWORD_A;
 
     SignInReq signInReq = new SignInReq();
     signInReq.setUsername(userName);
@@ -121,8 +121,8 @@ class AuthControllerTest {
 
   @Test
   public void signInInsufficientAuthenticationException() throws Exception {
-    String userName = "scott1";
-    String password = "tiger";
+    String userName = TestConstants.USER_NAME_A;
+    String password = TestConstants.USER_PASSWORD_A;
 
     SignInReq signInReq = new SignInReq();
     signInReq.setUsername(userName);
@@ -139,7 +139,7 @@ class AuthControllerTest {
   @Test
   public void signOut() throws Exception {
 
-    final String refreshToken = "26rvap1cr3maf85akd9jb27c7dlrlkfn82hn3rahrb9qhr0rcmtl82jjt75tapoqtqktkh6rgdicb7mm1i38qqhdpgb7v8q3omoffu7dj1o8is3h763o54l978tfp95v";
+    final String refreshToken = TestConstants.REFRESH_TOKEN;
 
     RefreshToken refreshTokenModel = new RefreshToken(refreshToken);
 
@@ -154,7 +154,7 @@ class AuthControllerTest {
   @Test
   public void signOutInvalidRefreshTokenException() throws Exception {
 
-    final String refreshToken = "26rvap1cr3maf85akd9jb27c7dlrlkfn82hn3rahrb9qhr0rcmtl82jjt75tapoqtqktkh6rgdicb7mm1i38qqhdpgb7v8q3omoffu7dj1o8is3h763o54l978tfp95v";
+    final String refreshToken = TestConstants.REFRESH_TOKEN;
 
     RefreshToken refreshTokenModel = new RefreshToken(refreshToken);
 

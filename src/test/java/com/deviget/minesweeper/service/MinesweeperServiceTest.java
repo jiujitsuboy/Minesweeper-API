@@ -15,6 +15,7 @@ import com.deviget.minesweeper.exception.CellNotFoundException;
 import com.deviget.minesweeper.exception.GameIsOverException;
 import com.deviget.minesweeper.exception.GameNotFoundException;
 import com.deviget.minesweeper.exception.InvalidGameParameter;
+import com.deviget.minesweeper.exception.UserNotFoundException;
 import com.deviget.minesweeper.model.GameStatus;
 import com.deviget.minesweeper.repository.MinesweeperBoardCellRepository;
 import com.deviget.minesweeper.repository.MinesweeperGameRepository;
@@ -111,6 +112,18 @@ class MinesweeperServiceTest {
 
     assertThrows(InvalidGameParameter.class, () -> classUnderTest.createNewGame(UUID.randomUUID(), rows, columns, bombs));
 
+  }
+
+  @Test
+  public void createNewGameUserNotFoundException() {
+
+    int rows = 10;
+    int columns = 10;
+    int bombs = 5;
+
+    when(userRepository.findById(any(UUID.class))).thenThrow(new UserNotFoundException("No such user found"));
+
+    assertThrows(UserNotFoundException.class, () -> classUnderTest.createNewGame(UUID.randomUUID(), rows, columns, bombs));
   }
 
   @Test
