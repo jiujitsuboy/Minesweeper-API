@@ -490,3 +490,8 @@ Complete coverage of the following layers:
    ![](images/Swagger-Authentication.png)
 2. Game
    ![](images/Swagger-Game.png)
+
+### Game UI - React Front-End
+
+The Minesweeper API has a UI built in React 17, which allow to play the game in a more dynamic and natural way.
+The source code can be found in [Minesweeper UI](https://github.com/jiujitsuboy/react-minesweeper) 
